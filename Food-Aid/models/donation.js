@@ -165,6 +165,11 @@ const donationSchema = new mongoose.Schema({
         phone: String
     },
 
+    agentLocation: {
+        lat: Number,
+        lng: Number
+    },
+
     co2Saved: Number,
     createdAt: { type: Date, default: Date.now }
 });

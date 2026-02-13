@@ -742,35 +742,558 @@
 // export default Receive;
 
 
+// import { useState, useEffect } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { Check, Search, MapPin, Navigation, Loader2, X } from "lucide-react";
+// import { toast } from "sonner";
+// import { useAuth } from "@/context/AuthContext";
+// import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+// import "leaflet/dist/leaflet.css";
+// import L from 'leaflet';
+// import icon from 'leaflet/dist/images/marker-icon.png';
+// import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// // Fix Leaflet Icons
+// const DefaultIcon = L.icon({
+//   iconUrl: icon, shadowUrl: iconShadow,
+//   iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
+// });
+// L.Marker.prototype.options.icon = DefaultIcon;
+
+// // --- HELPER 1: HANDLE MAP CLICKS ---
+// const LocationMarker = ({ setPos, pos }: { setPos: (latlng: { lat: number, lng: number }) => void, pos: { lat: number, lng: number } | null }) => {
+//   useMapEvents({
+//     click(e) {
+//       setPos(e.latlng);
+//     },
+//   });
+//   return pos ? <Marker position={pos} /> : null;
+// };
+
+// // --- HELPER 2: MOVE MAP CAMERA ---
+// const ChangeView = ({ center }: { center: { lat: number, lng: number } }) => {
+//   const map = useMap();
+//   map.setView(center, 15); 
+//   return null;
+// };
+
+// const Receive = () => {
+//   const { user } = useAuth();
+//   const [donations, setDonations] = useState<any[]>([]);
+//   const [loading, setLoading] = useState(true);
+  
+//   // LOCATION & MODAL STATE
+//   const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
+//   const [mapCenter, setMapCenter] = useState<{lat: number, lng: number}>({ lat: 17.3850, lng: 78.4867 });
+//   const [showLocModal, setShowLocModal] = useState(false);
+//   const [pickerMode, setPickerMode] = useState(false);
+//   const [selectedDonationId, setSelectedDonationId] = useState<string | null>(null);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
+//   // SEARCH STATE
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [isSearching, setIsSearching] = useState(false);
+
+//   useEffect(() => {
+//     fetchAvailableDonations();
+//   }, []);
+
+//   const fetchAvailableDonations = async () => {
+//     try {
+//       const res = await fetch("http://192.168.1.2:5000/api/donations?status=pending");
+//       const data = await res.json();
+//       setDonations(data);
+//     } catch (err) { toast.error("Could not load feed"); } 
+//     finally { setLoading(false); }
+//   };
+
+//   // --- MAP SEARCH FUNCTION ---
+//   const handleSearch = async () => {
+//     if (!searchQuery) return;
+//     setIsSearching(true);
+    
+//     try {
+//         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+//         const data = await res.json();
+
+//         if (data && data.length > 0) {
+//             const firstResult = data[0];
+//             const newLoc = {
+//                 lat: parseFloat(firstResult.lat),
+//                 lng: parseFloat(firstResult.lon)
+//             };
+            
+//             setMapCenter(newLoc);
+//             setLocation(newLoc);
+//             toast.success(`Found: ${firstResult.display_name.split(",")[0]}`);
+//         } else {
+//             toast.error("Location not found");
+//         }
+//     } catch (error) {
+//         toast.error("Search failed");
+//     } finally {
+//         setIsSearching(false);
+//     }
+//   };
+
+//   // --- STEP 1: OPEN MODAL ---
+//   const initiateAccept = (id: string) => {
+//     setSelectedDonationId(id);
+//     setShowLocModal(true);
+//     setPickerMode(false);
+//     // Reset location state for fresh pick
+//     setLocation(null);
+//     setSearchQuery("");
+//   };
+
+//   // --- STEP 2: GET GPS ---
+//   const useCurrentLocation = () => {
+//     if (!navigator.geolocation) {
+//         toast.error("Geolocation not supported");
+//         return;
+//     }
+//     toast.info("Fetching GPS...");
+//     navigator.geolocation.getCurrentPosition(
+//         (pos) => {
+//             const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+//             setLocation(loc);
+//             confirmAccept(loc); 
+//         },
+//         () => {
+//             toast.error("GPS Denied. Please pick on map.");
+//             setPickerMode(true);
+//         }
+//     );
+//   };
+
+//   // --- STEP 3: CONFIRM & SEND ---
+//   const confirmAccept = async (finalLoc: { lat: number, lng: number }) => {
+//     if (!selectedDonationId) return;
+    
+//     setIsSubmitting(true);
+//     setShowLocModal(false);
+
+//     try {
+//         await fetch(`http://192.168.1.2:5000/api/donation/${selectedDonationId}/accept`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ 
+//                 receiverId: user?.id, 
+//                 receiverName: user?.organization || user?.name,
+//                 location: finalLoc 
+//             })
+//         });
+        
+//         toast.success("Request Sent! Searching for nearby agents...");
+//         setDonations(prev => prev.filter(d => d._id !== selectedDonationId));
+//     } catch (err) { 
+//         toast.error("Failed to accept"); 
+//     } finally {
+//         setIsSubmitting(false);
+//         setSelectedDonationId(null);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen pt-24 px-4 max-w-4xl mx-auto relative">
+//       <h1 className="text-3xl font-display font-bold mb-8">Incoming <span className="gradient-text">Donations</span></h1>
+      
+//       {/* --- LOCATION MODAL --- */}
+//       <AnimatePresence>
+//         {showLocModal && (
+//           <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+//             <motion.div initial={{scale:0.9}} animate={{scale:1}} className="bg-[#0B0F1A] border border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl">
+//               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+//                 <MapPin className="text-primary" /> Confirm Delivery Location
+//               </h2>
+
+//               {!pickerMode ? (
+//                 // OPTION 1: BUTTONS
+//                 <div className="space-y-3">
+//                   <button onClick={useCurrentLocation} className="w-full py-4 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all flex items-center justify-center gap-2 font-bold">
+//                     <Navigation className="w-5 h-5" /> Use Current Location
+//                   </button>
+//                   <div className="text-center text-muted-foreground text-xs font-bold my-2">- OR -</div>
+//                   <button onClick={() => setPickerMode(true)} className="w-full py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
+//                     <MapPin className="w-5 h-5" /> Select on Map
+//                   </button>
+//                   <button onClick={() => setShowLocModal(false)} className="w-full py-2 text-sm text-muted-foreground hover:text-white mt-2">Cancel</button>
+//                 </div>
+//               ) : (
+//                 // OPTION 2: MAP PICKER WITH SEARCH
+//                 <div className="space-y-4">
+//                   {/* SEARCH BAR */}
+//                   <div className="flex gap-2">
+//                     <input 
+//                         type="text" 
+//                         placeholder="Search location (e.g., Charminar)" 
+//                         value={searchQuery}
+//                         onChange={(e) => setSearchQuery(e.target.value)}
+//                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+//                         className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary"
+//                     />
+//                     <button onClick={handleSearch} disabled={isSearching} className="bg-white/10 p-2 rounded-lg hover:bg-white/20">
+//                         {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+//                     </button>
+//                   </div>
+
+//                   <p className="text-xs text-muted-foreground">Search or tap on the map to pin location.</p>
+                  
+//                   {/* MAP */}
+//                   <div className="h-64 rounded-xl overflow-hidden border border-white/10 relative">
+//                     <MapContainer center={mapCenter} zoom={13} style={{ height: "100%", width: "100%" }}>
+//                       <ChangeView center={mapCenter} />
+//                       <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+//                       <LocationMarker setPos={setLocation} pos={location} />
+//                     </MapContainer>
+//                     {!location && <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[400] text-xs text-white bg-black/30">Tap to Pin</div>}
+//                   </div>
+
+//                   <div className="flex gap-3">
+//                     <button onClick={() => setPickerMode(false)} className="flex-1 py-3 rounded-lg border border-white/10 text-muted-foreground hover:bg-white/5">Back</button>
+//                     <button onClick={() => location && confirmAccept(location)} className="flex-1 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-50 hover:bg-primary/90" disabled={!location}>
+//                       Confirm
+//                     </button>
+//                   </div>
+//                 </div>
+//               )}
+//             </motion.div>
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
+
+//       {/* --- DONATION LIST --- */}
+//       {loading ? <Loader2 className="animate-spin mx-auto" /> : (
+//         <AnimatePresence>
+//             {donations.length === 0 ? (
+//                 <div className="glass-card p-8 text-center text-muted-foreground">
+//                     <Search className="w-12 h-12 mx-auto mb-3 opacity-20" />
+//                     No pending donations. Check back later.
+//                 </div>
+//             ) : (
+//                 donations.map(d => (
+//                     <motion.div key={d._id} initial={{opacity:0}} animate={{opacity:1}} className="glass-card p-6 border-l-4 border-emerald-500 mb-4">
+//                         <div className="flex justify-between items-center">
+//                             <div>
+//                                 <h3 className="text-xl font-bold">{d.foodType}</h3>
+//                                 <p className="text-emerald-400">{d.quantity}kg • {d.donor?.name}</p>
+//                                 <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+//                                     <MapPin className="w-3 h-3" /> {d.location?.lat ? "Pickup location set" : "Unknown"}
+//                                 </p>
+//                             </div>
+//                             <button onClick={() => initiateAccept(d._id)} disabled={isSubmitting} className="btn-glow-solid px-6 py-2 flex items-center gap-2">
+//                                 <Check className="w-4 h-4" /> Accept
+//                             </button>
+//                         </div>
+//                     </motion.div>
+//                 ))
+//             )}
+//         </AnimatePresence>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Receive;
+
+
+
+
+
+// import { useState, useEffect } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { Check, Search, MapPin, Navigation, Loader2 } from "lucide-react";
+// import { toast } from "sonner";
+// import { useAuth } from "@/context/AuthContext";
+// import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+// import "leaflet/dist/leaflet.css";
+// import L from 'leaflet';
+// import icon from 'leaflet/dist/images/marker-icon.png';
+// import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// const DefaultIcon = L.icon({
+//   iconUrl: icon, shadowUrl: iconShadow,
+//   iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
+// });
+// L.Marker.prototype.options.icon = DefaultIcon;
+
+// const LocationMarker = ({ setPos, pos }: { setPos: (latlng: { lat: number, lng: number }) => void, pos: { lat: number, lng: number } | null }) => {
+//   useMapEvents({
+//     click(e) { setPos(e.latlng); },
+//   });
+//   return pos ? <Marker position={pos} /> : null;
+// };
+
+// const ChangeView = ({ center }: { center: { lat: number, lng: number } }) => {
+//   const map = useMap();
+//   map.setView(center, 15); 
+//   return null;
+// };
+
+// const Receive = () => {
+//   const { user } = useAuth();
+//   const [donations, setDonations] = useState<any[]>([]);
+//   const [loading, setLoading] = useState(true);
+  
+//   const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
+//   const [mapCenter, setMapCenter] = useState<{lat: number, lng: number}>({ lat: 17.3850, lng: 78.4867 });
+//   const [showLocModal, setShowLocModal] = useState(false);
+//   const [pickerMode, setPickerMode] = useState(false);
+//   const [selectedDonationId, setSelectedDonationId] = useState<string | null>(null);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [isSearching, setIsSearching] = useState(false);
+
+//   useEffect(() => {
+//     fetchAvailableDonations();
+//   }, [user]);
+
+//   const fetchAvailableDonations = async () => {
+//     try {
+//       // 1. Fetch available pending donations
+//       const resPending = await fetch("http://192.168.1.2:5000/api/donations?status=pending");
+//       const dataPending = await resPending.json();
+      
+//       // 2. Fetch MY accepted donations (so they stay on screen to show tracking!)
+//       let dataMy = [];
+//       if (user?.id) {
+//           const resMy = await fetch(`http://192.168.1.2:5000/api/donations?receiverId=${user.id}`);
+//           const rawMy = await resMy.json();
+//           // Filter to only show active ones, not delivered/expired
+//           dataMy = rawMy.filter((d: any) => ["searching_agent", "assigned", "transit"].includes(d.status));
+//       }
+      
+//       // Combine them (Active ones first)
+//       setDonations([...dataMy, ...dataPending]);
+//     } catch (err) { 
+//       toast.error("Could not load feed"); 
+//     } finally { 
+//       setLoading(false); 
+//     }
+//   };
+
+//   const handleSearch = async () => {
+//     if (!searchQuery) return;
+//     setIsSearching(true);
+//     try {
+//         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+//         const data = await res.json();
+//         if (data && data.length > 0) {
+//             const firstResult = data[0];
+//             const newLoc = { lat: parseFloat(firstResult.lat), lng: parseFloat(firstResult.lon) };
+//             setMapCenter(newLoc);
+//             setLocation(newLoc);
+//             toast.success(`Found: ${firstResult.display_name.split(",")[0]}`);
+//         } else {
+//             toast.error("Location not found");
+//         }
+//     } catch (error) { toast.error("Search failed"); } 
+//     finally { setIsSearching(false); }
+//   };
+
+//   const initiateAccept = (id: string) => {
+//     setSelectedDonationId(id);
+//     setShowLocModal(true);
+//     setPickerMode(false);
+//     setLocation(null);
+//     setSearchQuery("");
+//   };
+
+//   const useCurrentLocation = () => {
+//     if (!navigator.geolocation) {
+//         toast.error("Geolocation not supported");
+//         return;
+//     }
+//     toast.info("Fetching GPS...");
+//     navigator.geolocation.getCurrentPosition(
+//         (pos) => {
+//             const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+//             setLocation(loc);
+//             confirmAccept(loc); 
+//         },
+//         () => {
+//             toast.error("GPS Denied. Please pick on map.");
+//             setPickerMode(true);
+//         }
+//     );
+//   };
+
+//   const confirmAccept = async (finalLoc: { lat: number, lng: number }) => {
+//     if (!selectedDonationId) return;
+    
+//     setIsSubmitting(true);
+//     setShowLocModal(false);
+
+//     try {
+//         await fetch(`http://192.168.1.2:5000/api/donation/${selectedDonationId}/accept`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ 
+//                 receiverId: user?.id, 
+//                 receiverName: user?.organization || user?.name,
+//                 location: finalLoc 
+//             })
+//         });
+        
+//         toast.success("Request Sent! Searching for nearby agents...");
+        
+//         // Update it locally to show "Searching..." immediately instead of disappearing
+//         setDonations(prev => prev.map(d => 
+//             d._id === selectedDonationId ? { ...d, status: "searching_agent" } : d
+//         ));
+//     } catch (err) { 
+//         toast.error("Failed to accept"); 
+//     } finally {
+//         setIsSubmitting(false);
+//         setSelectedDonationId(null);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen pt-24 px-4 max-w-4xl mx-auto relative">
+//       <h1 className="text-3xl font-display font-bold mb-8">Incoming <span className="gradient-text">Donations</span></h1>
+      
+//       {/* --- LOCATION MODAL --- */}
+//       <AnimatePresence>
+//         {showLocModal && (
+//           <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+//             <motion.div initial={{scale:0.9}} animate={{scale:1}} className="bg-[#0B0F1A] border border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl">
+//               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+//                 <MapPin className="text-primary" /> Confirm Delivery Location
+//               </h2>
+
+//               {!pickerMode ? (
+//                 <div className="space-y-3">
+//                   <button onClick={useCurrentLocation} className="w-full py-4 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all flex items-center justify-center gap-2 font-bold">
+//                     <Navigation className="w-5 h-5" /> Use Current Location
+//                   </button>
+//                   <div className="text-center text-muted-foreground text-xs font-bold my-2">- OR -</div>
+//                   <button onClick={() => setPickerMode(true)} className="w-full py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-semibold flex items-center justify-center gap-2">
+//                     <MapPin className="w-5 h-5" /> Select on Map
+//                   </button>
+//                   <button onClick={() => setShowLocModal(false)} className="w-full py-2 text-sm text-muted-foreground hover:text-white mt-2">Cancel</button>
+//                 </div>
+//               ) : (
+//                 <div className="space-y-4">
+//                   <div className="flex gap-2">
+//                     <input 
+//                         type="text" 
+//                         placeholder="Search location (e.g., Charminar)" 
+//                         value={searchQuery}
+//                         onChange={(e) => setSearchQuery(e.target.value)}
+//                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+//                         className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary"
+//                     />
+//                     <button onClick={handleSearch} disabled={isSearching} className="bg-white/10 p-2 rounded-lg hover:bg-white/20">
+//                         {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+//                     </button>
+//                   </div>
+
+//                   <p className="text-xs text-muted-foreground">Search or tap on the map to pin location.</p>
+                  
+//                   <div className="h-64 rounded-xl overflow-hidden border border-white/10 relative">
+//                     <MapContainer center={mapCenter} zoom={13} style={{ height: "100%", width: "100%" }}>
+//                       <ChangeView center={mapCenter} />
+//                       <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+//                       <LocationMarker setPos={setLocation} pos={location} />
+//                     </MapContainer>
+//                   </div>
+
+//                   <div className="flex gap-3">
+//                     <button onClick={() => setPickerMode(false)} className="flex-1 py-3 rounded-lg border border-white/10 text-muted-foreground hover:bg-white/5">Back</button>
+//                     <button onClick={() => location && confirmAccept(location)} className="flex-1 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-50 hover:bg-primary/90" disabled={!location}>
+//                       Confirm
+//                     </button>
+//                   </div>
+//                 </div>
+//               )}
+//             </motion.div>
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
+
+//       {/* --- DONATION LIST --- */}
+//       {loading ? <Loader2 className="animate-spin mx-auto" /> : (
+//         <AnimatePresence>
+//             {donations.length === 0 ? (
+//                 <div className="glass-card p-8 text-center text-muted-foreground">
+//                     <Search className="w-12 h-12 mx-auto mb-3 opacity-20" />
+//                     No pending donations. Check back later.
+//                 </div>
+//             ) : (
+//                 donations.map(d => (
+//                     <motion.div key={d._id} initial={{opacity:0}} animate={{opacity:1}} className="glass-card p-6 border-l-4 border-emerald-500 mb-4">
+//                         <div className="flex justify-between items-center">
+//                             <div>
+//                                 <h3 className="text-xl font-bold">{d.foodType}</h3>
+//                                 <p className="text-emerald-400">{d.quantity}kg • {d.donor?.name}</p>
+//                                 <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+//                                     <MapPin className="w-3 h-3" /> {d.location?.lat ? "Location Provided" : "Unknown Location"}
+//                                 </p>
+//                             </div>
+                            
+//                             {/* --- CONDITIONAL ACTIONS --- */}
+//                             {d.status === "assigned" || d.status === "transit" ? (
+//                                 <button 
+//                                     onClick={() => window.location.href = `/agent/${d._id}`} 
+//                                     className="bg-primary/20 hover:bg-primary/40 text-primary border border-primary/50 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors"
+//                                 >
+//                                     <Navigation className="w-4 h-4" /> Track Volunteer
+//                                 </button>
+//                             ) : d.status === "searching_agent" ? (
+//                                 <button disabled className="btn-glow-solid opacity-50 px-6 py-2 flex items-center gap-2 cursor-not-allowed">
+//                                     <Loader2 className="w-4 h-4 animate-spin" /> Searching...
+//                                 </button>
+//                             ) : (
+//                                 <button onClick={() => initiateAccept(d._id)} disabled={isSubmitting} className="btn-glow-solid px-6 py-2 flex items-center gap-2">
+//                                     <Check className="w-4 h-4" /> Accept
+//                                 </button>
+//                             )}
+//                         </div>
+//                     </motion.div>
+//                 ))
+//             )}
+//         </AnimatePresence>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Receive;
+
+
+
+
+
+
+
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Search, MapPin, Navigation, Loader2, X } from "lucide-react";
+import { Check, Search, MapPin, Navigation, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+import { useNavigate } from "react-router-dom"; // --- IMPORT ADDED ---
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Fix Leaflet Icons
 const DefaultIcon = L.icon({
   iconUrl: icon, shadowUrl: iconShadow,
   iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// --- HELPER 1: HANDLE MAP CLICKS ---
 const LocationMarker = ({ setPos, pos }: { setPos: (latlng: { lat: number, lng: number }) => void, pos: { lat: number, lng: number } | null }) => {
   useMapEvents({
-    click(e) {
-      setPos(e.latlng);
-    },
+    click(e) { setPos(e.latlng); },
   });
   return pos ? <Marker position={pos} /> : null;
 };
 
-// --- HELPER 2: MOVE MAP CAMERA ---
 const ChangeView = ({ center }: { center: { lat: number, lng: number } }) => {
   const map = useMap();
   map.setView(center, 15); 
@@ -779,10 +1302,10 @@ const ChangeView = ({ center }: { center: { lat: number, lng: number } }) => {
 
 const Receive = () => {
   const { user } = useAuth();
+  const navigate = useNavigate(); // --- HOOK ADDED ---
   const [donations, setDonations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // LOCATION & MODAL STATE
   const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
   const [mapCenter, setMapCenter] = useState<{lat: number, lng: number}>({ lat: 17.3850, lng: 78.4867 });
   const [showLocModal, setShowLocModal] = useState(false);
@@ -790,63 +1313,64 @@ const Receive = () => {
   const [selectedDonationId, setSelectedDonationId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // SEARCH STATE
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     fetchAvailableDonations();
-  }, []);
+  }, [user]);
 
   const fetchAvailableDonations = async () => {
     try {
-      const res = await fetch("http://192.168.1.2:5000/api/donations?status=pending");
-      const data = await res.json();
-      setDonations(data);
-    } catch (err) { toast.error("Could not load feed"); } 
-    finally { setLoading(false); }
+      // 1. Fetch available pending donations
+      const resPending = await fetch("http://192.168.1.2:5000/api/donations?status=pending");
+      const dataPending = await resPending.json();
+      
+      // 2. Fetch MY accepted donations (so they stay on screen to show tracking!)
+      let dataMy = [];
+      if (user?.id) {
+          const resMy = await fetch(`http://192.168.1.2:5000/api/donations?receiverId=${user.id}`);
+          const rawMy = await resMy.json();
+          // Filter to only show active ones, not delivered/expired
+          dataMy = rawMy.filter((d: any) => ["searching_agent", "assigned", "transit"].includes(d.status));
+      }
+      
+      // Combine them (Active ones first)
+      setDonations([...dataMy, ...dataPending]);
+    } catch (err) { 
+      toast.error("Could not load feed"); 
+    } finally { 
+      setLoading(false); 
+    }
   };
 
-  // --- MAP SEARCH FUNCTION ---
   const handleSearch = async () => {
     if (!searchQuery) return;
     setIsSearching(true);
-    
     try {
         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
         const data = await res.json();
-
         if (data && data.length > 0) {
             const firstResult = data[0];
-            const newLoc = {
-                lat: parseFloat(firstResult.lat),
-                lng: parseFloat(firstResult.lon)
-            };
-            
+            const newLoc = { lat: parseFloat(firstResult.lat), lng: parseFloat(firstResult.lon) };
             setMapCenter(newLoc);
             setLocation(newLoc);
             toast.success(`Found: ${firstResult.display_name.split(",")[0]}`);
         } else {
             toast.error("Location not found");
         }
-    } catch (error) {
-        toast.error("Search failed");
-    } finally {
-        setIsSearching(false);
-    }
+    } catch (error) { toast.error("Search failed"); } 
+    finally { setIsSearching(false); }
   };
 
-  // --- STEP 1: OPEN MODAL ---
   const initiateAccept = (id: string) => {
     setSelectedDonationId(id);
     setShowLocModal(true);
     setPickerMode(false);
-    // Reset location state for fresh pick
     setLocation(null);
     setSearchQuery("");
   };
 
-  // --- STEP 2: GET GPS ---
   const useCurrentLocation = () => {
     if (!navigator.geolocation) {
         toast.error("Geolocation not supported");
@@ -866,7 +1390,6 @@ const Receive = () => {
     );
   };
 
-  // --- STEP 3: CONFIRM & SEND ---
   const confirmAccept = async (finalLoc: { lat: number, lng: number }) => {
     if (!selectedDonationId) return;
     
@@ -885,7 +1408,11 @@ const Receive = () => {
         });
         
         toast.success("Request Sent! Searching for nearby agents...");
-        setDonations(prev => prev.filter(d => d._id !== selectedDonationId));
+        
+        // Update it locally to show "Searching..." immediately instead of disappearing
+        setDonations(prev => prev.map(d => 
+            d._id === selectedDonationId ? { ...d, status: "searching_agent" } : d
+        ));
     } catch (err) { 
         toast.error("Failed to accept"); 
     } finally {
@@ -908,7 +1435,6 @@ const Receive = () => {
               </h2>
 
               {!pickerMode ? (
-                // OPTION 1: BUTTONS
                 <div className="space-y-3">
                   <button onClick={useCurrentLocation} className="w-full py-4 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all flex items-center justify-center gap-2 font-bold">
                     <Navigation className="w-5 h-5" /> Use Current Location
@@ -920,9 +1446,7 @@ const Receive = () => {
                   <button onClick={() => setShowLocModal(false)} className="w-full py-2 text-sm text-muted-foreground hover:text-white mt-2">Cancel</button>
                 </div>
               ) : (
-                // OPTION 2: MAP PICKER WITH SEARCH
                 <div className="space-y-4">
-                  {/* SEARCH BAR */}
                   <div className="flex gap-2">
                     <input 
                         type="text" 
@@ -939,14 +1463,12 @@ const Receive = () => {
 
                   <p className="text-xs text-muted-foreground">Search or tap on the map to pin location.</p>
                   
-                  {/* MAP */}
                   <div className="h-64 rounded-xl overflow-hidden border border-white/10 relative">
                     <MapContainer center={mapCenter} zoom={13} style={{ height: "100%", width: "100%" }}>
                       <ChangeView center={mapCenter} />
                       <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
                       <LocationMarker setPos={setLocation} pos={location} />
                     </MapContainer>
-                    {!location && <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[400] text-xs text-white bg-black/30">Tap to Pin</div>}
                   </div>
 
                   <div className="flex gap-3">
@@ -978,12 +1500,27 @@ const Receive = () => {
                                 <h3 className="text-xl font-bold">{d.foodType}</h3>
                                 <p className="text-emerald-400">{d.quantity}kg • {d.donor?.name}</p>
                                 <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                                    <MapPin className="w-3 h-3" /> {d.location?.lat ? "Pickup location set" : "Unknown"}
+                                    <MapPin className="w-3 h-3" /> {d.location?.lat ? "Location Provided" : "Unknown Location"}
                                 </p>
                             </div>
-                            <button onClick={() => initiateAccept(d._id)} disabled={isSubmitting} className="btn-glow-solid px-6 py-2 flex items-center gap-2">
-                                <Check className="w-4 h-4" /> Accept
-                            </button>
+                            
+                            {/* --- CONDITIONAL ACTIONS --- */}
+                            {d.status === "assigned" || d.status === "transit" ? (
+                                <button 
+                                    onClick={() => navigate(`/agent/${d._id}`)} // --- CHANGED TO NAVIGATE ---
+                                    className="bg-primary/20 hover:bg-primary/40 text-primary border border-primary/50 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors"
+                                >
+                                    <Navigation className="w-4 h-4" /> Track Volunteer
+                                </button>
+                            ) : d.status === "searching_agent" ? (
+                                <button disabled className="btn-glow-solid opacity-50 px-6 py-2 flex items-center gap-2 cursor-not-allowed">
+                                    <Loader2 className="w-4 h-4 animate-spin" /> Searching...
+                                </button>
+                            ) : (
+                                <button onClick={() => initiateAccept(d._id)} disabled={isSubmitting} className="btn-glow-solid px-6 py-2 flex items-center gap-2">
+                                    <Check className="w-4 h-4" /> Accept
+                                </button>
+                            )}
                         </div>
                     </motion.div>
                 ))

@@ -1,370 +1,9 @@
-// // // import { useState, useEffect } from "react";
-// // // import { motion } from "framer-motion";
-// // // import { Canvas } from "@react-three/fiber";
-// // // import { MapPin, Navigation, Clock, Coins, AlertTriangle, Shield, Leaf } from "lucide-react";
-// // // import ImpactCoin from "@/components/three/ImpactCoin";
-// // // import { Suspense } from "react";
-
-// // // const routeStops = [
-// // //   { name: "Grand Hotel", type: "pickup", time: "10:30 AM" },
-// // //   { name: "City Restaurant", type: "pickup", time: "10:50 AM" },
-// // //   { name: "Hope Orphanage", type: "delivery", time: "11:15 AM" },
-// // // ];
-
-// // // const Volunteer = () => {
-// // //   const [countdown, setCountdown] = useState(900); // 15 min
-
-// // //   useEffect(() => {
-// // //     const t = setInterval(() => setCountdown((c) => Math.max(0, c - 1)), 1000);
-// // //     return () => clearInterval(t);
-// // //   }, []);
-
-// // //   const mins = Math.floor(countdown / 60);
-// // //   const secs = countdown % 60;
-
-// // //   return (
-// // //     <div className="min-h-screen pt-20 pb-12 px-4 max-w-2xl mx-auto">
-// // //       <motion.h1
-// // //         initial={{ opacity: 0, y: 20 }}
-// // //         animate={{ opacity: 1, y: 0 }}
-// // //         className="text-3xl font-display font-bold mb-8"
-// // //       >
-// // //         Volunteer <span className="gradient-text">Dashboard</span>
-// // //       </motion.h1>
-
-// // //       {/* Mission Card */}
-// // //       <motion.div
-// // //         initial={{ opacity: 0, y: 20 }}
-// // //         animate={{ opacity: 1, y: 0 }}
-// // //         transition={{ delay: 0.1 }}
-// // //         className="glass-card glow-border-danger p-6 mb-6 animate-glow-border"
-// // //         style={{ animationName: "none", borderColor: "hsl(348 100% 61% / 0.4)", boxShadow: "0 0 15px rgba(255,59,92,0.15)" }}
-// // //       >
-// // //         <div className="flex items-center gap-2 mb-3">
-// // //           <AlertTriangle className="w-5 h-5 text-destructive" />
-// // //           <span className="text-sm font-semibold text-destructive">URGENT MISSION</span>
-// // //         </div>
-// // //         <p className="font-display font-semibold text-lg mb-2">Pickup in {mins}:{secs.toString().padStart(2, "0")} — Risk of Spoilage!</p>
-// // //         <p className="text-sm text-muted-foreground">3.5kg of prepared meals from Grand Hotel expiring soon.</p>
-// // //         <div className="mt-4 flex gap-3">
-// // //           <button className="btn-glow-solid text-sm py-2">Accept Mission</button>
-// // //           <button className="btn-glow text-sm py-2">View Details</button>
-// // //         </div>
-// // //       </motion.div>
-
-// // //       {/* Mock Map */}
-// // //       <motion.div
-// // //         initial={{ opacity: 0, y: 20 }}
-// // //         animate={{ opacity: 1, y: 0 }}
-// // //         transition={{ delay: 0.2 }}
-// // //         className="glass-card p-6 mb-6"
-// // //       >
-// // //         <h3 className="font-display font-semibold mb-4 flex items-center gap-2">
-// // //           <Navigation className="w-5 h-5 text-primary" />
-// // //           Route Overview
-// // //         </h3>
-// // //         {/* Simulated map */}
-// // //         <div className="relative bg-muted/20 rounded-xl p-6 border border-white/5 min-h-[200px]">
-// // //           {/* Route line */}
-// // //           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="none">
-// // //             <defs>
-// // //               <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="0">
-// // //                 <stop offset="0%" stopColor="#00FFB2" />
-// // //                 <stop offset="100%" stopColor="#00D9FF" />
-// // //               </linearGradient>
-// // //             </defs>
-// // //             <path d="M 60 150 Q 150 50 200 100 Q 250 150 340 60" stroke="url(#routeGrad)" strokeWidth="2" fill="none" strokeDasharray="6 4" />
-// // //           </svg>
-
-// // //           {/* Stops */}
-// // //           <div className="relative flex justify-between items-end h-[160px]">
-// // //             {routeStops.map((stop, i) => (
-// // //               <motion.div
-// // //                 key={stop.name}
-// // //                 initial={{ opacity: 0, scale: 0 }}
-// // //                 animate={{ opacity: 1, scale: 1 }}
-// // //                 transition={{ delay: 0.4 + i * 0.2 }}
-// // //                 className="text-center z-10"
-// // //                 style={{ position: "absolute", left: `${15 + i * 35}%`, top: i === 1 ? "20%" : i === 2 ? "10%" : "60%" }}
-// // //               >
-// // //                 <motion.div
-// // //                   animate={{ scale: [1, 1.3, 1] }}
-// // //                   transition={{ repeat: Infinity, duration: 2, delay: i * 0.3 }}
-// // //                   className={`w-4 h-4 rounded-full mx-auto mb-1 ${stop.type === "pickup" ? "bg-primary" : "bg-secondary"}`}
-// // //                 />
-// // //                 <p className="text-xs font-medium">{stop.name}</p>
-// // //                 <p className="text-xs text-muted-foreground">{stop.time}</p>
-// // //               </motion.div>
-// // //             ))}
-// // //           </div>
-// // //         </div>
-
-// // //         <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
-// // //           <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-primary" /> 2 pickups</span>
-// // //           <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-secondary" /> ETA: 45 min</span>
-// // //         </div>
-// // //       </motion.div>
-
-// // //       {/* Impact Wallet */}
-// // //       <motion.div
-// // //         initial={{ opacity: 0, y: 20 }}
-// // //         animate={{ opacity: 1, y: 0 }}
-// // //         transition={{ delay: 0.3 }}
-// // //         className="glass-card p-6 mb-6"
-// // //       >
-// // //         <h3 className="font-display font-semibold mb-4 flex items-center gap-2">
-// // //           <Coins className="w-5 h-5 text-yellow-400" />
-// // //           Impact Wallet
-// // //         </h3>
-
-// // //         <div className="flex items-center gap-6">
-// // //           {/* 3D Coin */}
-// // //           <div className="w-24 h-24 flex-shrink-0">
-// // //             <Canvas camera={{ position: [0, 0, 2.5] }} dpr={[1, 1.5]}>
-// // //               <ambientLight intensity={0.5} />
-// // //               <pointLight position={[5, 5, 5]} intensity={1} />
-// // //               <Suspense fallback={null}>
-// // //                 <ImpactCoin />
-// // //               </Suspense>
-// // //             </Canvas>
-// // //           </div>
-
-// // //           <div>
-// // //             <p className="text-3xl font-display font-bold text-yellow-400">350</p>
-// // //             <p className="text-sm text-muted-foreground">Impact Tokens Earned</p>
-// // //             <div className="flex gap-4 mt-3">
-// // //               <div className="text-center">
-// // //                 <p className="text-sm font-semibold flex items-center gap-1">
-// // //                   <Shield className="w-3 h-3 text-primary" /> 42
-// // //                 </p>
-// // //                 <p className="text-xs text-muted-foreground">Deliveries</p>
-// // //               </div>
-// // //               <div className="text-center">
-// // //                 <p className="text-sm font-semibold flex items-center gap-1">
-// // //                   <Leaf className="w-3 h-3 text-primary" /> 128kg
-// // //                 </p>
-// // //                 <p className="text-xs text-muted-foreground">CO₂ Saved</p>
-// // //               </div>
-// // //             </div>
-// // //           </div>
-// // //         </div>
-// // //       </motion.div>
-// // //     </div>
-// // //   );
-// // // };
-
-// // // export default Volunteer;
-
-
-
-// // import { useState, useEffect } from "react";
-// // import { motion } from "framer-motion";
-// // import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
-// // import { Truck, MapPin, Navigation, Clock } from "lucide-react"; // Removed 'Check' (unused)
-// // import { useAuth } from "@/context/AuthContext";
-// // import { toast } from "sonner";
-// // import "leaflet/dist/leaflet.css";
-
-// // // --- LEAFLET ICON FIX ---
-// // import L from 'leaflet';
-// // import icon from 'leaflet/dist/images/marker-icon.png';
-// // import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-// // // Fix for default marker icon missing in React Leaflet
-// // const DefaultIcon = L.icon({
-// //   iconUrl: icon,
-// //   shadowUrl: iconShadow,
-// //   iconSize: [25, 41],
-// //   iconAnchor: [12, 41],
-// //   popupAnchor: [1, -34]
-// // });
-// // L.Marker.prototype.options.icon = DefaultIcon;
-// // // ------------------------
-
-// // const Volunteer = () => {
-// //   const { user } = useAuth();
-// //   const [tasks, setTasks] = useState<any[]>([]);
-// //   const [myTasks, setMyTasks] = useState<any[]>([]);
-// //   const [activeTab, setActiveTab] = useState<"available" | "route">("available");
-  
-// //   // Agent Location (Simulated for Demo - Hyderabad Center)
-// //   const agentLoc = { lat: 17.3850, lng: 78.4867 }; 
-
-// //   useEffect(() => {
-// //     fetchTasks();
-// //   }, []);
-
-// //   const fetchTasks = async () => {
-// //     try {
-// //       // 1. Get tasks waiting for drivers (Status: accepted)
-// //       const resAvailable = await fetch("http://192.168.1.2:5000/api/donations?status=accepted");
-// //       const dataAvailable = await resAvailable.json();
-// //       setTasks(dataAvailable);
-
-// //       // 2. Get tasks I already accepted (Status: assigned + my ID)
-// //       if (user?.id) {
-// //           const resMy = await fetch(`http://192.168.1.2:5000/api/donations?status=assigned&agentId=${user.id}`);
-// //           const dataMy = await resMy.json();
-// //           // Sort by expiry (Simple string comparison for demo)
-// //           const sortedRoute = dataMy.sort((a: any, b: any) => (a.expiry || "").localeCompare(b.expiry || ""));
-// //           setMyTasks(sortedRoute);
-// //       }
-// //     } catch (err) {
-// //       console.error("Error fetching tasks:", err);
-// //     }
-// //   };
-
-// //   const handleAccept = async (id: string) => {
-// //     try {
-// //         await fetch(`http://192.168.1.2:5000/api/donation/${id}/claim`, {
-// //             method: "PUT",
-// //             headers: { "Content-Type": "application/json" },
-// //             body: JSON.stringify({ agentId: user?.id, agentName: user?.name || "Volunteer Agent" })
-// //         });
-// //         toast.success("Task Added to Route!");
-// //         fetchTasks(); // Refresh lists
-// //         setActiveTab("route"); // Auto-switch to map view
-// //     } catch (e) {
-// //         toast.error("Failed to accept task");
-// //     }
-// //   };
-
-// //   // Calculate Route: Agent -> Task 1 -> Task 2 ...
-// //   // We filter out items without location to prevent map crashes
-// //   const routePoints = myTasks.filter(t => t.location).map(t => [t.location.lat, t.location.lng]);
-// //   const routePath = [[agentLoc.lat, agentLoc.lng], ...routePoints];
-
-// //   return (
-// //     <div className="min-h-screen pt-24 px-4 max-w-7xl mx-auto flex flex-col md:flex-row gap-6">
-      
-// //       {/* LEFT PANEL: Task List */}
-// //       <div className="w-full md:w-1/3 space-y-6">
-// //         <div className="flex items-center justify-between">
-// //             <h1 className="text-2xl font-display font-bold">Agent <span className="gradient-text">Console</span></h1>
-// //             <div className="flex bg-white/5 rounded-lg p-1">
-// //                 <button onClick={() => setActiveTab("available")} className={`px-3 py-1 text-xs rounded-md transition-colors ${activeTab === "available" ? "bg-primary text-black font-bold" : "text-muted-foreground hover:text-white"}`}>New</button>
-// //                 <button onClick={() => setActiveTab("route")} className={`px-3 py-1 text-xs rounded-md transition-colors ${activeTab === "route" ? "bg-primary text-black font-bold" : "text-muted-foreground hover:text-white"}`}>Route</button>
-// //             </div>
-// //         </div>
-
-// //         <div className="space-y-3 h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-// //             {activeTab === "available" ? (
-// //                 tasks.length === 0 ? (
-// //                     <div className="glass-card p-8 text-center text-muted-foreground">
-// //                         <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
-// //                         <p>No new pickups nearby.</p>
-// //                     </div>
-// //                 ) : (
-// //                     tasks.map(task => (
-// //                         <motion.div key={task._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-4 border-l-4 border-yellow-400">
-// //                             <div className="flex justify-between items-start gap-2">
-// //                                 <div>
-// //                                     <h3 className="font-bold text-white">{task.foodType}</h3>
-// //                                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-// //                                         <MapPin className="w-3 h-3" /> {task.location?.address || "Hyderabad"}
-// //                                     </div>
-// //                                     <div className="flex items-center gap-2 mt-2 text-xs text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded w-fit">
-// //                                         <Clock className="w-3 h-3" /> Expires: {task.expiry}
-// //                                     </div>
-// //                                 </div>
-// //                                 <button onClick={() => handleAccept(task._id)} className="btn-glow-solid px-4 py-2 text-xs whitespace-nowrap">
-// //                                     Accept
-// //                                 </button>
-// //                             </div>
-// //                         </motion.div>
-// //                     ))
-// //                 )
-// //             ) : (
-// //                 myTasks.length === 0 ? (
-// //                     <div className="glass-card p-8 text-center text-muted-foreground">
-// //                         <Navigation className="w-12 h-12 mx-auto mb-3 opacity-20" />
-// //                         <p>Your route is empty.</p>
-// //                     </div>
-// //                 ) : (
-// //                     myTasks.map((task, i) => (
-// //                         <div key={task._id} className="glass-card p-4 border-l-4 border-primary relative">
-// //                             <div className="absolute -left-3 top-4 w-6 h-6 rounded-full bg-primary text-black flex items-center justify-center text-xs font-bold shadow-lg shadow-primary/50">
-// //                                 {i + 1}
-// //                             </div>
-// //                             <div className="ml-2">
-// //                                 <h3 className="font-bold text-white">{task.foodType}</h3>
-// //                                 <p className="text-xs text-muted-foreground">Pickup from: <span className="text-white">{task.donor?.name || "Donor"}</span></p>
-// //                                 <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-// //                                     <Truck className="w-3 h-3" /> Stop #{i + 1} on route
-// //                                 </p>
-// //                             </div>
-// //                         </div>
-// //                     ))
-// //                 )
-// //             )}
-// //         </div>
-// //       </div>
-
-// //       {/* RIGHT PANEL: The Map */}
-// //       <div className="w-full md:w-2/3 glass-card p-1 h-[600px] relative rounded-xl overflow-hidden shadow-2xl">
-// //         <MapContainer center={[17.3850, 78.4867]} zoom={13} style={{ height: "100%", width: "100%" }}>
-// //             <TileLayer
-// //                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-// //                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-// //             />
-            
-// //             {/* Agent Location */}
-// //             <Marker position={[agentLoc.lat, agentLoc.lng]}>
-// //                 <Popup className="text-black font-bold">You are here 📍</Popup>
-// //             </Marker>
-
-// //             {/* Available Tasks Markers */}
-// //             {activeTab === "available" && tasks.map(t => t.location && (
-// //                 <Marker key={t._id} position={[t.location.lat, t.location.lng]}>
-// //                     <Popup className="text-black">
-// //                         <strong>{t.foodType}</strong><br/>
-// //                         Pickup Here
-// //                     </Popup>
-// //                 </Marker>
-// //             ))}
-
-// //             {/* My Route Markers */}
-// //             {activeTab === "route" && myTasks.map((t, i) => t.location && (
-// //                 <Marker key={t._id} position={[t.location.lat, t.location.lng]}>
-// //                     <Popup className="text-black">
-// //                         <strong>Stop #{i+1}</strong><br/>
-// //                         {t.foodType}
-// //                     </Popup>
-// //                 </Marker>
-// //             ))}
-
-// //             {/* The Route Line (FIXED PROPS HERE) */}
-// //             {activeTab === "route" && myTasks.length > 0 && (
-// //                 <Polyline 
-// //                     positions={routePath as any} 
-// //                     pathOptions={{ color: "#00FFB2", weight: 4, dashArray: "10, 10" }} 
-// //                 />
-// //             )}
-// //         </MapContainer>
-        
-// //         {/* Map Overlay */}
-// //         <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-md p-4 rounded-xl z-[400] border border-white/10 shadow-xl">
-// //             <h4 className="text-emerald-400 font-bold flex items-center gap-2">
-// //                 <Navigation className="w-4 h-4" /> Live Navigation
-// //             </h4>
-// //             <p className="text-xs text-white/70 mt-1">AI Route Optimization: Active</p>
-// //             <div className="mt-2 text-2xl font-mono font-bold text-white">{myTasks.length} <span className="text-sm font-sans font-normal text-muted-foreground">Stops</span></div>
-// //         </div>
-// //       </div>
-// //     </div>
-// //   );
-// // };
-
-// // export default Volunteer;
-
-
-
 // import { useState, useEffect } from "react";
-// import { motion } from "framer-motion";
-// import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
-// import { Truck, MapPin, Navigation, PackageCheck, CheckCircle2 } from "lucide-react";
+// import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
+// import { Truck, MapPin, Navigation, PackageCheck, CheckCircle2, ExternalLink, List, Map as MapIcon, AlertTriangle, ShieldAlert } from "lucide-react";
 // import { useAuth } from "@/context/AuthContext";
 // import { toast } from "sonner";
+// import { motion, AnimatePresence } from "framer-motion";
 // import "leaflet/dist/leaflet.css";
 // import L from 'leaflet';
 // import icon from 'leaflet/dist/images/marker-icon.png';
@@ -376,226 +15,90 @@
 // });
 // L.Marker.prototype.options.icon = DefaultIcon;
 
-// const Volunteer = () => {
-//   const { user } = useAuth();
-//   const [tasks, setTasks] = useState<any[]>([]); // New requests (searching_agent)
-//   const [currentTask, setCurrentTask] = useState<any>(null); // Active task (assigned/transit)
-//   const [agentLoc] = useState<[number, number]>([17.3850, 78.4867]); 
-
-//   useEffect(() => {
-//     fetchTasks();
-//   }, []);
-
-//   const fetchTasks = async () => {
-//     // 1. Get tasks waiting for agent
-//     const resAvailable = await fetch("http://192.168.1.2:5000/api/donations?status=searching_agent");
-//     const dataAvailable = await resAvailable.json();
-//     setTasks(dataAvailable);
-
-//     // 2. Check if I have an active task
-//     if (user?.id) {
-//         // Fetch ALL my tasks
-//         const resMy = await fetch(`http://192.168.1.2:5000/api/donations?agentId=${user.id}`);
-//         const dataMy = await resMy.json();
-//         // Find one that is NOT delivered yet
-//         const active = dataMy.find((t: any) => t.status === "assigned" || t.status === "transit");
-//         setCurrentTask(active || null);
-//     }
-//   };
-
-//   const handleAccept = async (id: string) => {
-//     await fetch(`http://192.168.1.2:5000/api/donation/${id}/claim`, {
-//         method: "PUT",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ agentId: user?.id, agentName: user?.name })
-//     });
-//     toast.success("Task Accepted! Navigation Started.");
-//     fetchTasks();
-//   };
-
-//   const handlePickup = async () => {
-//     await fetch(`http://192.168.1.2:5000/api/donation/${currentTask._id}/pickup`, { method: "PUT" });
-//     toast.success("Pickup Confirmed! Routing to Receiver...");
-//     fetchTasks(); // Updates status to 'transit'
-//   };
-
-//   const handleDeliver = async () => {
-//     await fetch(`http://192.168.1.2:5000/api/donation/${currentTask._id}/deliver`, { method: "PUT" });
-//     toast.success("Delivered Successfully! Great Job.");
-//     setCurrentTask(null); // Clear task
-//     fetchTasks();
-//   };
-
-//   // --- NAVIGATION LOGIC ---
-//   // If status is 'assigned': Route is Agent -> Donor
-//   // If status is 'transit': Route is Agent (Donor) -> Receiver
-//   let routePath: [number, number][] = [];
-//   let destinationLabel = "";
-  
-//   if (currentTask) {
-//     if (currentTask.status === "assigned") {
-//         const donorLoc = currentTask.location; // Donor Location
-//         routePath = [agentLoc, [donorLoc.lat, donorLoc.lng]];
-//         destinationLabel = "Donor Location (Pickup)";
-//     } else if (currentTask.status === "transit") {
-//         const donorLoc = currentTask.location; 
-//         const receiverLoc = currentTask.receiver?.location || { lat: 17.4065, lng: 78.4772 };
-//         // Ideally start from Agent's real GPS, but for demo we start from Donor -> Receiver
-//         routePath = [[donorLoc.lat, donorLoc.lng], [receiverLoc.lat, receiverLoc.lng]];
-//         destinationLabel = "Receiver Location (Drop-off)";
-//     }
-//   }
-
-//   return (
-//     <div className="min-h-screen pt-24 px-4 max-w-7xl mx-auto flex flex-col md:flex-row gap-6">
-      
-//       {/* LEFT PANEL */}
-//       <div className="w-full md:w-1/3 space-y-6">
-//         <h1 className="text-2xl font-display font-bold">Agent <span className="gradient-text">Console</span></h1>
-
-//         {/* ACTIVE TASK CARD */}
-//         {currentTask ? (
-//             <div className="glass-card p-6 border-l-4 border-emerald-500 bg-emerald-500/5">
-//                 <h2 className="text-xl font-bold mb-2 text-white">Current Mission</h2>
-//                 <div className="space-y-4">
-//                     <div>
-//                         <p className="text-xs text-muted-foreground uppercase">Step</p>
-//                         <p className="text-lg font-bold text-emerald-400">
-//                             {currentTask.status === "assigned" ? "1. Pick Up Food" : "2. Deliver Food"}
-//                         </p>
-//                     </div>
-//                     <div>
-//                         <p className="text-xs text-muted-foreground uppercase">Details</p>
-//                         <p className="text-white">{currentTask.foodType} ({currentTask.quantity}kg)</p>
-//                     </div>
-
-//                     {/* ACTION BUTTON */}
-//                     {currentTask.status === "assigned" ? (
-//                         <button onClick={handlePickup} className="w-full btn-glow-solid py-3 flex justify-center gap-2">
-//                             <PackageCheck className="w-5 h-5" /> Confirm Pickup
-//                         </button>
-//                     ) : (
-//                         <button onClick={handleDeliver} className="w-full btn-glow-solid py-3 flex justify-center gap-2 bg-emerald-500 hover:bg-emerald-400">
-//                             <CheckCircle2 className="w-5 h-5" /> Confirm Delivery
-//                         </button>
-//                     )}
-//                 </div>
-//             </div>
-//         ) : (
-//             <div className="glass-card p-6 text-center text-muted-foreground">
-//                 <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
-//                 No active mission. Accept a request below.
-//             </div>
-//         )}
-
-//         {/* AVAILABLE REQUESTS LIST */}
-//         {!currentTask && (
-//             <div className="space-y-3">
-//                 <h3 className="font-bold text-muted-foreground text-sm">Nearby Requests</h3>
-//                 {tasks.length === 0 ? <p className="text-sm text-muted-foreground">Searching for requests...</p> : 
-//                 tasks.map(t => (
-//                     <div key={t._id} className="glass-card p-4 flex justify-between items-center">
-//                         <div>
-//                             <p className="font-bold">{t.foodType}</p>
-//                             <p className="text-xs text-muted-foreground">{t.location?.address || "Hyderabad"}</p>
-//                         </div>
-//                         <button onClick={() => handleAccept(t._id)} className="btn-glow-solid px-3 py-1 text-xs">Accept</button>
-//                     </div>
-//                 ))}
-//             </div>
-//         )}
-//       </div>
-
-//       {/* MAP PANEL */}
-//       <div className="w-full md:w-2/3 glass-card p-1 h-[600px] relative rounded-xl overflow-hidden">
-//         <MapContainer center={agentLoc} zoom={13} style={{ height: "100%", width: "100%" }}>
-//             <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
-            
-//             {/* Agent Marker */}
-//             <Marker position={agentLoc}><Popup>You (Agent)</Popup></Marker>
-
-//             {/* If Task Active: Show Route */}
-//             {currentTask && routePath.length > 0 && (
-//                 <>
-//                     <Polyline positions={routePath} pathOptions={{ color: "#00FFB2", weight: 5 }} />
-//                     <Marker position={routePath[1]}>
-//                         <Popup>{destinationLabel}</Popup>
-//                     </Marker>
-//                 </>
-//             )}
-
-//             {/* If No Task: Show Available Pickups */}
-//             {!currentTask && tasks.map(t => t.location && (
-//                 <Marker key={t._id} position={[t.location.lat, t.location.lng]}>
-//                     <Popup>Pickup: {t.foodType}</Popup>
-//                 </Marker>
-//             ))}
-//         </MapContainer>
-        
-//         {/* Map Overlay */}
-//         {currentTask && (
-//             <div className="absolute top-4 right-4 bg-black/80 backdrop-blur p-4 rounded-xl z-[400] border border-emerald-500/30">
-//                 <h4 className="text-emerald-400 font-bold flex items-center gap-2">
-//                     <Navigation className="w-4 h-4" /> Navigating
-//                 </h4>
-//                 <p className="text-white font-bold mt-1">
-//                     {currentTask.status === "assigned" ? "To Donor" : "To Receiver"}
-//                 </p>
-//             </div>
-//         )}
-//       </div>
-//     </div>
-//   );
+// // --- MATH & UTILITY HELPERS ---
+// const calcDist = (loc1: {lat: number, lng: number}, loc2: {lat: number, lng: number}) => {
+//     if (!loc1 || !loc2) return 999;
+//     const R = 6371; 
+//     const dLat = (loc2.lat - loc1.lat) * Math.PI / 180;
+//     const dLon = (loc2.lng - loc1.lng) * Math.PI / 180;
+//     const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(loc1.lat * Math.PI / 180) * Math.cos(loc2.lat * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+//     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 // };
 
-// export default Volunteer;
+// const parseTimeToMins = (timeStr: string) => {
+//     if(!timeStr) return 120; 
+//     const str = timeStr.toLowerCase();
+//     const val = parseFloat(str);
+//     if (isNaN(val)) return 120;
+//     if (str.includes('hour') || str.includes('hr')) return val * 60;
+//     return val; 
+// };
 
+// const createNumberedIcon = (num: number, isPickup: boolean, isUrgent: boolean = false) => {
+//     const color = isUrgent ? '#EF4444' : (isPickup ? '#00FFB2' : '#3B82F6'); 
+//     return L.divIcon({
+//         className: 'custom-div-icon',
+//         html: `<div style="background-color: ${color}; color: ${isPickup && !isUrgent ? 'black' : 'white'}; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.5);">${num}</div>`,
+//         iconSize: [28, 28],
+//         iconAnchor: [14, 14]
+//     });
+// };
 
-
-// import { useState, useEffect } from "react";
-// import { motion } from "framer-motion";
-// import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
-// import { Truck, MapPin, Navigation, PackageCheck, CheckCircle2, Map as MapIcon, ExternalLink } from "lucide-react";
-// import { useAuth } from "@/context/AuthContext";
-// import { toast } from "sonner";
-// import "leaflet/dist/leaflet.css";
-// import L from 'leaflet';
-// import icon from 'leaflet/dist/images/marker-icon.png';
-// import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-// const DefaultIcon = L.icon({
-//   iconUrl: icon, shadowUrl: iconShadow,
-//   iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
-// });
-// L.Marker.prototype.options.icon = DefaultIcon;
+// const RecenterMap = ({ lat, lng }: { lat: number, lng: number }) => {
+//   const map = useMap();
+//   useEffect(() => { map.setView([lat, lng], map.getZoom()); }, [lat, lng, map]);
+//   return null;
+// };
 
 // const Volunteer = () => {
 //   const { user } = useAuth();
-//   const [tasks, setTasks] = useState<any[]>([]); // New requests
-//   const [currentTask, setCurrentTask] = useState<any>(null); // Active task
-//   const [agentLoc] = useState<[number, number]>([17.3850, 78.4867]); 
+//   const [activeTab, setActiveTab] = useState<"requests" | "routes">("requests");
+//   const [availableTasks, setAvailableTasks] = useState<any[]>([]); 
+//   const [myTasks, setMyTasks] = useState<any[]>([]); 
+//   const [agentLoc, setAgentLoc] = useState<[number, number] | null>(null);
 
 //   useEffect(() => {
-//     fetchTasks();
+//     if (!navigator.geolocation) {
+//         toast.error("Geolocation not supported");
+//         return;
+//     }
+//     const watchId = navigator.geolocation.watchPosition(
+//         (pos) => setAgentLoc([pos.coords.latitude, pos.coords.longitude]),
+//         (err) => console.error(err),
+//         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+//     );
+//     return () => navigator.geolocation.clearWatch(watchId);
 //   }, []);
+
+//   useEffect(() => { fetchTasks(); }, []);
+
+//   useEffect(() => {
+//     if (myTasks.length === 0 || !agentLoc) return;
+//     const broadcast = () => {
+//         myTasks.forEach(task => {
+//             fetch(`http://192.168.1.2:5000/api/donation/${task._id}/location`, {
+//                 method: "PUT",
+//                 headers: { "Content-Type": "application/json" },
+//                 body: JSON.stringify({ lat: agentLoc[0], lng: agentLoc[1] })
+//             }).catch(() => {});
+//         });
+//     };
+//     broadcast();
+//     const interval = setInterval(broadcast, 3000);
+//     return () => clearInterval(interval);
+//   }, [agentLoc, myTasks]);
 
 //   const fetchTasks = async () => {
 //     try {
-//         // 1. FIXED: Get tasks with status 'searching_agent' (Not 'accepted')
-//         const resAvailable = await fetch("http://192.168.1.2:5000/api/donations?status=searching_agent");
-//         const dataAvailable = await resAvailable.json();
-//         setTasks(dataAvailable);
+//         const resAvail = await fetch("http://192.168.1.2:5000/api/donations?status=searching_agent");
+//         setAvailableTasks(await resAvail.json());
 
-//         // 2. Check if I have an active task (assigned or transit)
 //         if (user?.id) {
 //             const resMy = await fetch(`http://192.168.1.2:5000/api/donations?agentId=${user.id}`);
 //             const dataMy = await resMy.json();
-//             const active = dataMy.find((t: any) => t.status === "assigned" || t.status === "transit");
-//             setCurrentTask(active || null);
+//             setMyTasks(dataMy.filter((t: any) => t.status === "assigned" || t.status === "transit"));
 //         }
-//     } catch (err) {
-//         console.error("Sync Error", err);
-//     }
+//     } catch (err) { console.error("Sync Error", err); }
 //   };
 
 //   const handleAccept = async (id: string) => {
@@ -604,57 +107,182 @@
 //         headers: { "Content-Type": "application/json" },
 //         body: JSON.stringify({ agentId: user?.id, agentName: user?.name })
 //     });
-//     toast.success("Task Accepted! Navigation Started.");
+//     toast.success("Added to AI Route Constraints");
+//     setActiveTab("routes");
 //     fetchTasks();
 //   };
 
-//   const handlePickup = async () => {
-//     await fetch(`http://192.168.1.2:5000/api/donation/${currentTask._id}/pickup`, { method: "PUT" });
-//     toast.success("Pickup Confirmed! Routing to Receiver...");
-//     fetchTasks(); 
-//   };
-
-//   const handleDeliver = async () => {
-//     await fetch(`http://192.168.1.2:5000/api/donation/${currentTask._id}/deliver`, { method: "PUT" });
-//     toast.success("Delivered Successfully!");
-//     setCurrentTask(null); 
+//   const handleAction = async (step: any) => {
+//     if (step.type === "pickup") {
+//         await fetch(`http://192.168.1.2:5000/api/donation/${step.task._id}/pickup`, { method: "PUT" });
+//         toast.success("Collected! AI Recalculating...");
+//     } else {
+//         await fetch(`http://192.168.1.2:5000/api/donation/${step.task._id}/deliver`, { method: "PUT" });
+//         toast.success("Safe Delivery Complete!");
+//     }
 //     fetchTasks();
 //   };
 
-//   // --- GOOGLE MAPS LAUNCHER ---
-//   const openGoogleMaps = () => {
-//       if (!currentTask) return;
+//   // ========================================================================
+//   // AI ALGORITHM: MULTI-PICKUP BATCHING + VRPTW SPOILAGE CONSTRAINTS
+//   // ========================================================================
+//   const optimizeRoute = () => {
+//       if (!agentLoc || myTasks.length === 0) return [];
       
-//       const origin = `${agentLoc[0]},${agentLoc[1]}`;
-//       let destination = "";
+//       const tasksWithTime = myTasks.map(t => ({ ...t, expiryMins: parseTimeToMins(t.expiry) }));
+//       let currentLoc = { lat: agentLoc[0], lng: agentLoc[1] };
       
-//       if (currentTask.status === "assigned") {
-//           // Navigating to Donor
-//           destination = `${currentTask.location.lat},${currentTask.location.lng}`;
-//       } else {
-//           // Navigating to Receiver
-//           const recLoc = currentTask.receiver?.location || { lat: 17.4065, lng: 78.4772 };
-//           destination = `${recLoc.lat},${recLoc.lng}`;
+//       // unvisitedPickups: Things we agreed to pick up, but haven't yet
+//       let unvisitedPickups = tasksWithTime.filter(t => t.status === "assigned");
+//       // trunk: Things we HAVE picked up, but haven't dropped off yet
+//       let trunk = tasksWithTime.filter(t => t.status === "transit");
+      
+//       let steps = [];
+//       let currentTimeMins = 0; 
+//       const AVG_SPEED_KM_MIN = 0.5; // Approx 30 km/h city driving
+//       let safety = 0; 
+      
+//       while ((unvisitedPickups.length > 0 || trunk.length > 0) && safety < 100) {
+//           safety++;
+//           let bestStep = null;
+//           let bestScore = Infinity;
+//           let isPickup = true;
+//           let stepIndex = -1;
+//           let emergencyTriggered = false;
+
+//           // HELPER: Groups nearby pickups to encourage bulk collection
+//           const getClusterBonus = (targetNode: any) => {
+//               let nearbyCount = 0;
+//               unvisitedPickups.forEach(p => {
+//                   if (p._id !== targetNode._id && p.location && targetNode.location && calcDist(targetNode.location, p.location) < 3.0) nearbyCount++;
+//               });
+//               return nearbyCount * 2.0; // Subtracts 2km from distance penalty per nearby node
+//           };
+
+//           const evaluateCandidates = (candidates: any[], isPick: boolean) => {
+//               candidates.forEach((t, i) => {
+//                   const targetLoc = isPick ? t.location : (t.receiver?.location || {lat: 17.385, lng: 78.486});
+//                   if(!targetLoc) return;
+
+//                   const dist = calcDist(currentLoc, targetLoc);
+//                   const simulatedTravelMins = (dist / AVG_SPEED_KM_MIN) + 5; // Travel + 5 min loading time
+
+//                   // 1. SPOILAGE HARD CONSTRAINT
+//                   // "If I do this step, will any food in my trunk expire before I can deliver it?"
+//                   let violatesSpoilage = false;
+//                   trunk.forEach(drop => {
+//                       if (!isPick && drop._id === t._id) return; // Skip checking self if we are evaluating delivering it
+//                       const dropLoc = drop.receiver?.location || {lat: 17.385, lng: 78.486};
+//                       const distToDropFromHere = calcDist(targetLoc, dropLoc);
+//                       const timeToDrop = simulatedTravelMins + (distToDropFromHere / AVG_SPEED_KM_MIN) + 5;
+                      
+//                       // Check against expiry with a 10 minute safety buffer
+//                       if (currentTimeMins + timeToDrop > (drop.expiryMins - 10)) violatesSpoilage = true;
+//                   });
+
+//                   if (violatesSpoilage) return; // Route rejected to prevent food waste
+
+//                   // 2. HEURISTIC WEIGHTING (Score: Lower is better)
+//                   let score = dist;
+                  
+//                   if (isPick) {
+//                       score -= getClusterBonus(t); 
+//                       // BATCHING: If trunk is relatively empty, strongly encourage picking up more!
+//                       if (trunk.length < 3) {
+//                           score -= 2.0; 
+//                       }
+//                   } else {
+//                       const timeRemaining = t.expiryMins - (currentTimeMins + simulatedTravelMins);
+                      
+//                       // Only push for drop-off if trunk is getting full
+//                       if (trunk.length >= 3) score -= (trunk.length * 1.5);
+
+//                       // URGENCY OVERRIDE: If food is close to expiring, drop everything and deliver it
+//                       if (timeRemaining < 60) {
+//                           score -= (60 - timeRemaining) * 0.5;
+//                       }
+//                       if (timeRemaining < 30) {
+//                           score -= 100; // Absolute top priority
+//                           emergencyTriggered = true;
+//                       }
+//                   }
+
+//                   if (score < bestScore) {
+//                       bestScore = score;
+//                       bestStep = t;
+//                       isPickup = isPick;
+//                       stepIndex = i;
+//                   }
+//               });
+//           };
+
+//           evaluateCandidates(unvisitedPickups, true);
+//           evaluateCandidates(trunk, false);
+
+//           // FALLBACK: If all logical paths are blocked by constraints, force an emergency delivery of the most perishable item
+//           if (!bestStep && trunk.length > 0) {
+//                trunk.sort((a,b) => a.expiryMins - b.expiryMins);
+//                bestStep = trunk[0];
+//                isPickup = false;
+//                stepIndex = 0;
+//                emergencyTriggered = true;
+//           } else if (!bestStep) {
+//               break; 
+//           }
+
+//           // LOCK IN THE CHOSEN STEP & UPDATE SIMULATED STATE
+//           if (isPickup) {
+//               const stepLoc = bestStep.location || { lat: 17.3850, lng: 78.4867 };
+//               steps.push({ id: `p_${bestStep._id}`, type: 'pickup', task: bestStep, location: stepLoc, urgent: emergencyTriggered });
+//               unvisitedPickups.splice(stepIndex, 1);
+//               trunk.push(bestStep); // Load into trunk
+              
+//               currentTimeMins += (calcDist(currentLoc, stepLoc) / AVG_SPEED_KM_MIN) + 5; 
+//               currentLoc = stepLoc;
+//           } else {
+//               const recLoc = bestStep.receiver?.location || {lat: 17.385, lng: 78.486};
+//               steps.push({ id: `d_${bestStep._id}`, type: 'dropoff', task: bestStep, location: recLoc, urgent: emergencyTriggered });
+//               trunk.splice(stepIndex, 1); // Remove from trunk
+              
+//               currentTimeMins += (calcDist(currentLoc, recLoc) / AVG_SPEED_KM_MIN) + 5;
+//               currentLoc = recLoc;
+//           }
 //       }
-      
+//       return steps;
+//   };
+//   // ========================================================================
+
+//   const routeSteps = optimizeRoute();
+//   const currentTarget = routeSteps.length > 0 ? routeSteps[0] : null;
+
+//   const openGoogleMaps = () => {
+//       if (!currentTarget || !agentLoc) return;
+//       const origin = `${agentLoc[0]},${agentLoc[1]}`;
+//       const destination = `${currentTarget.location.lat},${currentTarget.location.lng}`;
 //       window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`, "_blank");
 //   };
 
-//   // --- ROUTING LOGIC FOR MAP ---
-//   let routePath: [number, number][] = [];
-//   let destinationLabel = "";
-  
-//   if (currentTask) {
-//     if (currentTask.status === "assigned") {
-//         const donorLoc = currentTask.location;
-//         routePath = [agentLoc, [donorLoc.lat, donorLoc.lng]];
-//         destinationLabel = "Pickup: " + currentTask.donor?.name;
-//     } else if (currentTask.status === "transit") {
-//         const donorLoc = currentTask.location; 
-//         const receiverLoc = currentTask.receiver?.location || { lat: 17.4065, lng: 78.4772 };
-//         routePath = [[donorLoc.lat, donorLoc.lng], [receiverLoc.lat, receiverLoc.lng]];
-//         destinationLabel = "Drop: " + (currentTask.receiver?.name || "Receiver");
-//     }
+//   const polylinePositions: [number, number][] = agentLoc 
+//       ? [agentLoc, ...routeSteps.map(s => [s.location.lat, s.location.lng] as [number, number])] 
+//       : [];
+
+//   if (!agentLoc) {
+//     return (
+//         <div className="min-h-screen flex items-center justify-center">
+//             <div className="text-center glass-card p-8 border border-emerald-500/20 max-w-sm mx-auto">
+//                 <Navigation className="w-12 h-12 mx-auto animate-pulse mb-4 text-emerald-500" />
+//                 <h2 className="text-xl font-bold text-white">Acquiring GPS...</h2>
+//                 <div className="mt-6 pt-6 border-t border-white/10">
+//                     <button 
+//                         onClick={() => { setAgentLoc([17.3850, 78.4867]); toast.success("Simulated GPS Activated!"); }}
+//                         className="w-full bg-primary/20 hover:bg-primary/40 text-primary border border-primary/50 px-4 py-2 rounded-lg text-sm font-bold transition-colors"
+//                     >
+//                         Simulate Location (Testing)
+//                     </button>
+//                 </div>
+//             </div>
+//         </div>
+//     );
 //   }
 
 //   return (
@@ -664,110 +292,133 @@
 //       <div className="w-full md:w-1/3 space-y-6">
 //         <h1 className="text-2xl font-display font-bold">Agent <span className="gradient-text">Console</span></h1>
 
-//         {/* ACTIVE TASK CARD */}
-//         {currentTask ? (
-//             <div className="glass-card p-6 border-l-4 border-emerald-500 bg-emerald-500/5 relative overflow-hidden">
-//                 <div className="absolute top-0 right-0 p-4 opacity-10"><Truck className="w-24 h-24" /></div>
-//                 <h2 className="text-xl font-bold mb-2 text-white">Current Mission</h2>
-                
-//                 <div className="space-y-4 relative z-10">
-//                     <div>
-//                         <p className="text-xs text-muted-foreground uppercase">Step</p>
-//                         <p className="text-lg font-bold text-emerald-400">
-//                             {currentTask.status === "assigned" ? "1. Pick Up Food" : "2. Deliver Food"}
-//                         </p>
-//                     </div>
-//                     <div>
-//                         <p className="text-xs text-muted-foreground uppercase">Target</p>
-//                         <p className="text-white">{destinationLabel}</p>
-//                     </div>
+//         <div className="glass-card p-1 flex">
+//             <button onClick={() => setActiveTab("requests")} className={`flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === "requests" ? "bg-primary text-black" : "text-muted-foreground hover:text-white"}`}>
+//                 <List className="w-4 h-4" /> Requests ({availableTasks.length})
+//             </button>
+//             <button onClick={() => setActiveTab("routes")} className={`flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === "routes" ? "bg-primary text-black" : "text-muted-foreground hover:text-white"}`}>
+//                 <MapIcon className="w-4 h-4" /> AI Route ({routeSteps.length})
+//             </button>
+//         </div>
 
-//                     {/* ACTION BUTTONS */}
-//                     <div className="grid gap-3">
-//                         {currentTask.status === "assigned" ? (
-//                             <button onClick={handlePickup} className="w-full btn-glow-solid py-3 flex justify-center gap-2">
-//                                 <PackageCheck className="w-5 h-5" /> Confirm Pickup
-//                             </button>
-//                         ) : (
-//                             <button onClick={handleDeliver} className="w-full btn-glow-solid py-3 flex justify-center gap-2 bg-emerald-500 hover:bg-emerald-400">
-//                                 <CheckCircle2 className="w-5 h-5" /> Confirm Delivery
-//                             </button>
-//                         )}
-//                     </div>
-//                 </div>
-//             </div>
-//         ) : (
-//             <div className="glass-card p-6 text-center text-muted-foreground">
-//                 <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
-//                 No active mission. Accept a request below.
-//             </div>
-//         )}
-
-//         {/* AVAILABLE REQUESTS LIST */}
-//         {!currentTask && (
-//             <div className="space-y-3">
-//                 <h3 className="font-bold text-muted-foreground text-sm">Nearby Requests</h3>
-//                 {tasks.length === 0 ? <p className="text-sm text-muted-foreground">Searching for requests...</p> : 
-//                 tasks.map(t => (
-//                     <div key={t._id} className="glass-card p-4 flex justify-between items-center border-l-4 border-yellow-400">
-//                         <div>
-//                             <p className="font-bold text-white">{t.foodType}</p>
-//                             <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-//                                 <MapPin className="w-3 h-3" /> {t.location?.address || "Hyderabad"}
+//         <AnimatePresence mode="wait">
+//             {activeTab === "requests" && (
+//                 <motion.div key="req" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="space-y-3">
+//                     {availableTasks.length === 0 ? <p className="text-sm text-muted-foreground text-center p-4 glass-card">No new requests nearby.</p> : 
+//                     availableTasks.map(t => (
+//                         <div key={t._id} className="glass-card p-4 border-l-4 border-yellow-400">
+//                             <div className="flex justify-between items-start mb-3">
+//                                 <div>
+//                                     <p className="font-bold text-white text-lg">{t.foodType}</p>
+//                                     <p className="text-emerald-400 text-sm">{t.quantity}kg • Expires in {t.expiry}</p>
+//                                 </div>
+//                                 <button onClick={() => handleAccept(t._id)} className="btn-glow-solid px-4 py-2 text-xs">Add to Route</button>
+//                             </div>
+//                             <div className="flex items-center gap-1 text-xs text-muted-foreground">
+//                                 <MapPin className="w-3 h-3" /> Pickup: {t.location?.lat ? "Location Provided" : "Unknown"}
 //                             </div>
 //                         </div>
-//                         <button onClick={() => handleAccept(t._id)} className="btn-glow-solid px-4 py-2 text-xs">Accept</button>
-//                     </div>
-//                 ))}
-//             </div>
-//         )}
+//                     ))}
+//                 </motion.div>
+//             )}
+
+//             {activeTab === "routes" && (
+//                 <motion.div key="rt" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="space-y-4">
+//                     {!currentTarget ? (
+//                         <div className="glass-card p-6 text-center text-muted-foreground">
+//                             <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
+//                             No active tasks. Go to Requests to add to your queue.
+//                         </div>
+//                     ) : (
+//                         <>
+//                             {/* TARGET #1 */}
+//                             <div className={`glass-card p-6 border-l-4 relative overflow-hidden ${currentTarget.urgent ? 'border-red-500 bg-red-500/10' : 'border-emerald-500 bg-emerald-500/5'}`}>
+//                                 <h2 className={`text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2 ${currentTarget.urgent ? 'text-red-500' : 'text-emerald-500'}`}>
+//                                     {currentTarget.urgent ? <><AlertTriangle className="w-4 h-4"/> Spoilage Constraint Active</> : "Next Stop (AI Optimized)"}
+//                                 </h2>
+//                                 <h3 className="text-xl font-bold text-white mb-1">
+//                                     {currentTarget.type === 'pickup' ? "Pickup" : "Deliver"} {currentTarget.task.foodType}
+//                                 </h3>
+//                                 <p className="text-sm text-muted-foreground mb-4">
+//                                     {currentTarget.type === 'pickup' ? "From: " + (currentTarget.task.donor?.name || "Donor") : "To: " + (currentTarget.task.receiver?.name || "Receiver")}
+//                                 </p>
+
+//                                 <div className="grid grid-cols-2 gap-3">
+//                                     <button onClick={openGoogleMaps} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-bold transition-colors">
+//                                         <Navigation className="w-4 h-4" /> Navigate
+//                                     </button>
+                                    
+//                                     <button onClick={() => handleAction(currentTarget)} className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 font-bold transition-colors text-black ${currentTarget.urgent ? 'bg-red-500 hover:bg-red-400' : 'bg-emerald-500 hover:bg-emerald-400'}`}>
+//                                         {currentTarget.type === 'pickup' ? <PackageCheck className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />} 
+//                                         {currentTarget.type === 'pickup' ? "Collected" : "Delivered"}
+//                                     </button>
+//                                 </div>
+//                             </div>
+
+//                             {/* UPCOMING STEPS QUEUE */}
+//                             {routeSteps.length > 1 && (
+//                                 <div className="mt-4">
+//                                     <h4 className="text-xs font-bold text-muted-foreground uppercase mb-3">Planned VRPTW Route</h4>
+//                                     <div className="space-y-2 relative before:absolute before:inset-0 before:ml-[15px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
+//                                         {routeSteps.slice(1).map((step, idx) => (
+//                                             <div key={step.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active glass-card p-3 rounded-xl opacity-70">
+//                                                 <div className="flex items-center gap-3">
+//                                                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${step.urgent ? 'bg-red-500/20 text-red-500' : (step.type === 'pickup' ? 'bg-[#00FFB2]/20 text-[#00FFB2]' : 'bg-blue-500/20 text-blue-400')}`}>
+//                                                         {idx + 2}
+//                                                     </div>
+//                                                     <div>
+//                                                         <p className="font-bold text-sm text-white flex items-center gap-2">
+//                                                             {step.type === 'pickup' ? "Pickup" : "Drop-off"} {step.task.foodType}
+//                                                             {step.urgent && <AlertTriangle className="w-3 h-3 text-red-500" />}
+//                                                         </p>
+//                                                     </div>
+//                                                 </div>
+//                                             </div>
+//                                         ))}
+//                                     </div>
+//                                 </div>
+//                             )}
+//                         </>
+//                     )}
+//                 </motion.div>
+//             )}
+//         </AnimatePresence>
 //       </div>
 
 //       {/* MAP PANEL */}
 //       <div className="w-full md:w-2/3 glass-card p-1 h-[600px] relative rounded-xl overflow-hidden">
 //         <MapContainer center={agentLoc} zoom={13} style={{ height: "100%", width: "100%" }}>
 //             <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
-            
-//             <Marker position={agentLoc}><Popup>You (Agent)</Popup></Marker>
+//             <RecenterMap lat={agentLoc[0]} lng={agentLoc[1]} />
 
-//             {currentTask && routePath.length > 0 && (
-//                 <>
-//                     <Polyline positions={routePath} pathOptions={{ color: "#00FFB2", weight: 5 }} />
-//                     <Marker position={routePath[1]}>
-//                         <Popup>{destinationLabel}</Popup>
-//                     </Marker>
-//                 </>
-//             )}
+//             <Marker position={agentLoc}><Popup>You (Live)</Popup></Marker>
 
-//             {!currentTask && tasks.map(t => t.location && (
+//             {activeTab === "requests" && availableTasks.map(t => t.location && (
 //                 <Marker key={t._id} position={[t.location.lat, t.location.lng]}>
 //                     <Popup>Pickup: {t.foodType}</Popup>
 //                 </Marker>
 //             ))}
+
+//             {activeTab === "routes" && routeSteps.map((step, idx) => (
+//                 <Marker key={step.id} position={[step.location.lat, step.location.lng]} icon={createNumberedIcon(idx + 1, step.type === 'pickup', step.urgent)}>
+//                     <Popup>{step.type === 'pickup' ? "Pickup" : "Deliver"}: {step.task.foodType}</Popup>
+//                 </Marker>
+//             ))}
+
+//             {activeTab === "routes" && routeSteps.length > 0 && (
+//                 <Polyline positions={polylinePositions} pathOptions={{ color: "#00FFB2", weight: 4, dashArray: "10,10" }} />
+//             )}
 //         </MapContainer>
         
-//         {/* OVERLAYS */}
-//         {currentTask && (
-//             <>
-//                 <div className="absolute top-4 right-4 bg-black/80 backdrop-blur p-4 rounded-xl z-[400] border border-emerald-500/30">
-//                     <h4 className="text-emerald-400 font-bold flex items-center gap-2">
-//                         <Navigation className="w-4 h-4" /> Navigating
-//                     </h4>
-//                     <p className="text-white font-bold mt-1">
-//                         {currentTask.status === "assigned" ? "To Donor" : "To Receiver"}
-//                     </p>
-//                 </div>
-                
-//                 {/* GOOGLE MAPS BUTTON */}
-//                 <button 
-//                     onClick={openGoogleMaps}
-//                     className="absolute bottom-6 right-6 z-[400] flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg font-bold transition-transform hover:scale-105 active:scale-95 group"
-//                 >
-//                     <MapIcon className="w-5 h-5" />
-//                     <span>Open Navigation</span>
-//                     <ExternalLink className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
-//                 </button>
-//             </>
+//         {currentTarget && activeTab === "routes" && (
+//             <button 
+//                 onClick={openGoogleMaps}
+//                 className="absolute bottom-6 right-6 z-[400] flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg font-bold transition-transform hover:scale-105 active:scale-95 group"
+//             >
+//                 <MapIcon className="w-5 h-5" />
+//                 <span>Open Next Stop in Maps</span>
+//                 <ExternalLink className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+//             </button>
 //         )}
 //       </div>
 //     </div>
@@ -775,86 +426,112 @@
 // };
 
 // export default Volunteer;
+
 
 
 
 
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
-import { Truck, MapPin, Navigation, PackageCheck, CheckCircle2, Map as MapIcon, ExternalLink } from "lucide-react";
+import { Truck, MapPin, Navigation, PackageCheck, CheckCircle2, ExternalLink, List, Map as MapIcon, AlertTriangle, ShieldAlert } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// Fix Leaflet Icons
 const DefaultIcon = L.icon({
   iconUrl: icon, shadowUrl: iconShadow,
   iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// --- COMPONENT TO AUTO-CENTER MAP ON MOVEMENT ---
+// --- MATH & UTILITY HELPERS ---
+const calcDist = (loc1: {lat: number, lng: number}, loc2: {lat: number, lng: number}) => {
+    if (!loc1 || !loc2) return 999;
+    const R = 6371; 
+    const dLat = (loc2.lat - loc1.lat) * Math.PI / 180;
+    const dLon = (loc2.lng - loc1.lng) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(loc1.lat * Math.PI / 180) * Math.cos(loc2.lat * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+};
+
+const parseTimeToMins = (timeStr: string) => {
+    if(!timeStr) return 120; 
+    const str = timeStr.toLowerCase();
+    const val = parseFloat(str);
+    if (isNaN(val)) return 120;
+    if (str.includes('hour') || str.includes('hr')) return val * 60;
+    return val; 
+};
+
+const createNumberedIcon = (num: number, isPickup: boolean, isUrgent: boolean = false) => {
+    const color = isUrgent ? '#EF4444' : (isPickup ? '#00FFB2' : '#3B82F6'); 
+    return L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: ${color}; color: ${isPickup && !isUrgent ? 'black' : 'white'}; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.5);">${num}</div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+    });
+};
+
 const RecenterMap = ({ lat, lng }: { lat: number, lng: number }) => {
   const map = useMap();
-  useEffect(() => {
-    map.setView([lat, lng], map.getZoom());
-  }, [lat, lng, map]);
+  useEffect(() => { map.setView([lat, lng], map.getZoom()); }, [lat, lng, map]);
   return null;
 };
 
 const Volunteer = () => {
   const { user } = useAuth();
-  const [tasks, setTasks] = useState<any[]>([]); 
-  const [currentTask, setCurrentTask] = useState<any>(null); 
-  
-  // LIVE LOCATION STATE
+  const [activeTab, setActiveTab] = useState<"requests" | "routes">("requests");
+  const [availableTasks, setAvailableTasks] = useState<any[]>([]); 
+  const [myTasks, setMyTasks] = useState<any[]>([]); 
   const [agentLoc, setAgentLoc] = useState<[number, number] | null>(null);
 
-  // 1. WATCH POSITION (Live Tracking)
   useEffect(() => {
     if (!navigator.geolocation) {
-        toast.error("Geolocation is not supported by your browser");
+        toast.error("Geolocation not supported");
         return;
     }
-
-    // Use watchPosition instead of getCurrentPosition for live updates
     const watchId = navigator.geolocation.watchPosition(
-        (pos) => {
-            const { latitude, longitude } = pos.coords;
-            setAgentLoc([latitude, longitude]);
-        },
-        (err) => console.error("Location Error:", err),
+        (pos) => setAgentLoc([pos.coords.latitude, pos.coords.longitude]),
+        (err) => console.error(err),
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
-
-    // Cleanup when component unmounts
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
+  useEffect(() => { fetchTasks(); }, []);
+
   useEffect(() => {
-    fetchTasks();
-  }, []);
+    if (myTasks.length === 0 || !agentLoc) return;
+    const broadcast = () => {
+        myTasks.forEach(task => {
+            fetch(`http://192.168.1.2:5000/api/donation/${task._id}/location`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ lat: agentLoc[0], lng: agentLoc[1] })
+            }).catch(() => {});
+        });
+    };
+    broadcast();
+    const interval = setInterval(broadcast, 3000);
+    return () => clearInterval(interval);
+  }, [agentLoc, myTasks]);
 
   const fetchTasks = async () => {
     try {
-        // Fetch tasks
-        const resAvailable = await fetch("http://192.168.1.2:5000/api/donations?status=searching_agent");
-        const dataAvailable = await resAvailable.json();
-        setTasks(dataAvailable);
+        const resAvail = await fetch("http://192.168.1.2:5000/api/donations?status=searching_agent");
+        setAvailableTasks(await resAvail.json());
 
-        // Check active task
         if (user?.id) {
             const resMy = await fetch(`http://192.168.1.2:5000/api/donations?agentId=${user.id}`);
             const dataMy = await resMy.json();
-            const active = dataMy.find((t: any) => t.status === "assigned" || t.status === "transit");
-            setCurrentTask(active || null);
+            setMyTasks(dataMy.filter((t: any) => t.status === "assigned" || t.status === "transit"));
         }
-    } catch (err) {
-        console.error("Sync Error", err);
-    }
+    } catch (err) { console.error("Sync Error", err); }
   };
 
   const handleAccept = async (id: string) => {
@@ -863,67 +540,179 @@ const Volunteer = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ agentId: user?.id, agentName: user?.name })
     });
-    toast.success("Task Accepted! Navigation Started.");
+    toast.success("Added to Route AI");
+    setActiveTab("routes");
     fetchTasks();
   };
 
-  const handlePickup = async () => {
-    await fetch(`http://192.168.1.2:5000/api/donation/${currentTask._id}/pickup`, { method: "PUT" });
-    toast.success("Pickup Confirmed! Routing to Receiver...");
-    fetchTasks(); 
-  };
-
-  const handleDeliver = async () => {
-    await fetch(`http://192.168.1.2:5000/api/donation/${currentTask._id}/deliver`, { method: "PUT" });
-    toast.success("Delivered Successfully!");
-    setCurrentTask(null); 
+  const handleAction = async (step: any) => {
+    if (step.type === "pickup") {
+        await fetch(`http://192.168.1.2:5000/api/donation/${step.task._id}/pickup`, { method: "PUT" });
+        toast.success("Collected! Recalculating Sequence...");
+    } else {
+        await fetch(`http://192.168.1.2:5000/api/donation/${step.task._id}/deliver`, { method: "PUT" });
+        toast.success("Safe Delivery Complete!");
+    }
     fetchTasks();
   };
+
+  // ========================================================================
+  // ADVANCED AI: CONTINUOUS BATCHING + VRPTW SPOILAGE CONSTRAINTS
+  // ========================================================================
+  const optimizeRoute = () => {
+      if (!agentLoc || myTasks.length === 0) return [];
+      
+      const tasksWithTime = myTasks.map(t => ({ ...t, expiryMins: parseTimeToMins(t.expiry) }));
+      let currentLoc = { lat: agentLoc[0], lng: agentLoc[1] };
+      
+      let unvisitedPickups = tasksWithTime.filter(t => t.status === "assigned");
+      let trunk = tasksWithTime.filter(t => t.status === "transit");
+      
+      let steps = [];
+      let currentTimeMins = 0; 
+      const AVG_SPEED_KM_MIN = 0.5; // ~30 km/h city driving
+      const STOP_TIME = 5; // 5 mins to load/unload
+      let safety = 0; 
+      
+      while ((unvisitedPickups.length > 0 || trunk.length > 0) && safety < 100) {
+          safety++;
+          let bestStep = null;
+          let isPickup = false;
+          let stepIndex = -1;
+
+          // 1. HARD SPOILAGE CONSTRAINT CHECK
+          // Can we go to this pickup and STILL deliver everything in the trunk before it rots?
+          const isPickupValid = (pickupTask: any) => {
+              const pLoc = pickupTask.location || { lat: 17.385, lng: 78.486 };
+              const timeToP = (calcDist(currentLoc, pLoc) / AVG_SPEED_KM_MIN) + STOP_TIME;
+              
+              // If we do this pickup, the time will be:
+              const simulatedTime = currentTimeMins + timeToP;
+
+              // Check every item in the trunk. Can we reach its dropoff from the new pickup location in time?
+              for (let i = 0; i < trunk.length; i++) {
+                  const dLoc = trunk[i].receiver?.location || { lat: 17.385, lng: 78.486 };
+                  const timeToD = (calcDist(pLoc, dLoc) / AVG_SPEED_KM_MIN) + STOP_TIME;
+                  // If travel time exceeds expiry, this pickup is INVALID.
+                  if (simulatedTime + timeToD > trunk[i].expiryMins) return false; 
+              }
+              return true; // All safe!
+          };
+
+          // Filter out Pickups that would ruin food
+          const validPickups = unvisitedPickups.filter(p => isPickupValid(p));
+
+          // 2. CHECK FOR EMERGENCIES IN TRUNK
+          let criticalDropoff = null;
+          let minTimeLeft = Infinity;
+          
+          trunk.forEach((t, i) => {
+              const dLoc = t.receiver?.location || { lat: 17.385, lng: 78.486 };
+              const travelTime = (calcDist(currentLoc, dLoc) / AVG_SPEED_KM_MIN) + STOP_TIME;
+              const timeLeft = t.expiryMins - (currentTimeMins + travelTime);
+              
+              // If an item will expire in under 30 mins, we drop EVERYTHING and go deliver it.
+              if (timeLeft < 30 && timeLeft < minTimeLeft) {
+                  minTimeLeft = timeLeft;
+                  criticalDropoff = { task: t, index: i };
+              }
+          });
+
+          // 3. DECISION LOGIC: BATCH PICKUP vs BATCH DELIVERY
+          if (criticalDropoff) {
+              // EMERGENCY: Must deliver immediately
+              bestStep = criticalDropoff.task;
+              isPickup = false;
+              stepIndex = criticalDropoff.index;
+          } 
+          else if (validPickups.length > 0) {
+              // PHASE 1: CONTINUOUS BATCH PICKUP
+              // We grab the closest pickup. The loop repeats and keeps grabbing pickups until 
+              // the trunk is full or a Spoilage Constraint forces a delivery!
+              let minDist = Infinity;
+              validPickups.forEach((p) => {
+                  const idx = unvisitedPickups.findIndex(up => up._id === p._id);
+                  const dist = calcDist(currentLoc, p.location || { lat: 17.385, lng: 78.486 });
+                  if (dist < minDist) { minDist = dist; bestStep = p; isPickup = true; stepIndex = idx; }
+              });
+          } 
+          else if (trunk.length > 0) {
+              // PHASE 2: CONTINUOUS BATCH DELIVERY
+              // Either no pickups left, or picking up more would ruin the food. Time to deliver!
+              let bestDropScore = Infinity;
+              trunk.forEach((t, i) => {
+                  const dLoc = t.receiver?.location || { lat: 17.385, lng: 78.486 };
+                  const dist = calcDist(currentLoc, dLoc);
+                  const travelTime = (dist / AVG_SPEED_KM_MIN) + STOP_TIME;
+                  const timeLeft = t.expiryMins - (currentTimeMins + travelTime);
+                  
+                  // Score = Distance + Urgency Penalty
+                  let score = dist;
+                  if (timeLeft < 60) score -= (60 - timeLeft) * 2; 
+                  
+                  if (score < bestDropScore) { bestDropScore = score; bestStep = t; isPickup = false; stepIndex = i; }
+              });
+          } else {
+              // Failsafe: Trunk is empty, but remaining pickups are technically "invalid" (already expired)
+              // Just go clear them from the map.
+              let minDist = Infinity;
+              unvisitedPickups.forEach((p, i) => {
+                  const dist = calcDist(currentLoc, p.location || { lat: 17.385, lng: 78.486 });
+                  if(dist < minDist) { minDist = dist; bestStep = p; isPickup = true; stepIndex = i; }
+              });
+          }
+
+          if (!bestStep) break;
+
+          // 4. LOCK IN THE STEP & UPDATE SIMULATED CLOCK
+          if (isPickup) {
+              const stepLoc = bestStep.location || { lat: 17.3850, lng: 78.4867 };
+              steps.push({ id: `p_${bestStep._id}`, type: 'pickup', task: bestStep, location: stepLoc, urgent: false });
+              unvisitedPickups.splice(stepIndex, 1);
+              trunk.push(bestStep); 
+              currentTimeMins += (calcDist(currentLoc, stepLoc) / AVG_SPEED_KM_MIN) + STOP_TIME; 
+              currentLoc = stepLoc;
+          } else {
+              const recLoc = bestStep.receiver?.location || {lat: 17.385, lng: 78.486};
+              const urgent = (bestStep.expiryMins - currentTimeMins) < 45;
+              steps.push({ id: `d_${bestStep._id}`, type: 'dropoff', task: bestStep, location: recLoc, urgent: urgent });
+              trunk.splice(stepIndex, 1); 
+              currentTimeMins += (calcDist(currentLoc, recLoc) / AVG_SPEED_KM_MIN) + STOP_TIME;
+              currentLoc = recLoc;
+          }
+      }
+      return steps;
+  };
+  // ========================================================================
+
+  const routeSteps = optimizeRoute();
+  const currentTarget = routeSteps.length > 0 ? routeSteps[0] : null;
 
   const openGoogleMaps = () => {
-      if (!currentTask || !agentLoc) return;
-      
+      if (!currentTarget || !agentLoc) return;
       const origin = `${agentLoc[0]},${agentLoc[1]}`;
-      let destination = "";
-      
-      if (currentTask.status === "assigned") {
-          destination = `${currentTask.location.lat},${currentTask.location.lng}`;
-      } else {
-          const recLoc = currentTask.receiver?.location || { lat: 17.4065, lng: 78.4772 };
-          destination = `${recLoc.lat},${recLoc.lng}`;
-      }
-      
+      const destination = `${currentTarget.location.lat},${currentTarget.location.lng}`;
       window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`, "_blank");
   };
 
-  // --- ROUTING LOGIC ---
-  let routePath: [number, number][] = [];
-  let destinationLabel = "";
-  
-  if (currentTask && agentLoc) {
-    if (currentTask.status === "assigned") {
-        const donorLoc = currentTask.location;
-        routePath = [agentLoc, [donorLoc.lat, donorLoc.lng]];
-        destinationLabel = "Pickup: " + currentTask.donor?.name;
-    } else if (currentTask.status === "transit") {
-        const donorLoc = currentTask.location; 
-        const receiverLoc = currentTask.receiver?.location || { lat: 17.4065, lng: 78.4772 };
-        
-        // IMPORTANT: Route starts from AGENT (moving) to RECEIVER
-        // Note: donorLoc is just history now, we route from Agent -> Receiver
-        routePath = [agentLoc, [receiverLoc.lat, receiverLoc.lng]];
-        destinationLabel = "Drop: " + (currentTask.receiver?.name || "Receiver");
-    }
-  }
+  const polylinePositions: [number, number][] = agentLoc 
+      ? [agentLoc, ...routeSteps.map(s => [s.location.lat, s.location.lng] as [number, number])] 
+      : [];
 
-  // If no location yet, show loading
   if (!agentLoc) {
     return (
-        <div className="min-h-screen flex items-center justify-center text-emerald-400">
-            <div className="text-center">
-                <Navigation className="w-12 h-12 mx-auto animate-pulse mb-4" />
-                <h2 className="text-xl font-bold">Acquiring GPS Signal...</h2>
-                <p className="text-sm text-muted-foreground mt-2">Please allow location access</p>
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center glass-card p-8 border border-emerald-500/20 max-w-sm mx-auto">
+                <Navigation className="w-12 h-12 mx-auto animate-pulse mb-4 text-emerald-500" />
+                <h2 className="text-xl font-bold text-white">Acquiring GPS...</h2>
+                <div className="mt-6 pt-6 border-t border-white/10">
+                    <button 
+                        onClick={() => { setAgentLoc([17.3850, 78.4867]); toast.success("Simulated GPS Activated!"); }}
+                        className="w-full bg-primary/20 hover:bg-primary/40 text-primary border border-primary/50 px-4 py-2 rounded-lg text-sm font-bold transition-colors"
+                    >
+                        Simulate Location (Testing)
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -936,111 +725,133 @@ const Volunteer = () => {
       <div className="w-full md:w-1/3 space-y-6">
         <h1 className="text-2xl font-display font-bold">Agent <span className="gradient-text">Console</span></h1>
 
-        {/* ACTIVE TASK CARD */}
-        {currentTask ? (
-            <div className="glass-card p-6 border-l-4 border-emerald-500 bg-emerald-500/5 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10"><Truck className="w-24 h-24" /></div>
-                <h2 className="text-xl font-bold mb-2 text-white">Current Mission</h2>
-                
-                <div className="space-y-4 relative z-10">
-                    <div>
-                        <p className="text-xs text-muted-foreground uppercase">Step</p>
-                        <p className="text-lg font-bold text-emerald-400">
-                            {currentTask.status === "assigned" ? "1. Pick Up Food" : "2. Deliver Food"}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="text-xs text-muted-foreground uppercase">Target</p>
-                        <p className="text-white">{destinationLabel}</p>
-                    </div>
+        <div className="glass-card p-1 flex">
+            <button onClick={() => setActiveTab("requests")} className={`flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === "requests" ? "bg-primary text-black" : "text-muted-foreground hover:text-white"}`}>
+                <List className="w-4 h-4" /> Requests ({availableTasks.length})
+            </button>
+            <button onClick={() => setActiveTab("routes")} className={`flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === "routes" ? "bg-primary text-black" : "text-muted-foreground hover:text-white"}`}>
+                <MapIcon className="w-4 h-4" /> AI Route ({routeSteps.length})
+            </button>
+        </div>
 
-                    <div className="grid gap-3">
-                        {currentTask.status === "assigned" ? (
-                            <button onClick={handlePickup} className="w-full btn-glow-solid py-3 flex justify-center gap-2">
-                                <PackageCheck className="w-5 h-5" /> Confirm Pickup
-                            </button>
-                        ) : (
-                            <button onClick={handleDeliver} className="w-full btn-glow-solid py-3 flex justify-center gap-2 bg-emerald-500 hover:bg-emerald-400">
-                                <CheckCircle2 className="w-5 h-5" /> Confirm Delivery
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
-        ) : (
-            <div className="glass-card p-6 text-center text-muted-foreground">
-                <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                No active mission. Accept a request below.
-            </div>
-        )}
-
-        {/* AVAILABLE REQUESTS */}
-        {!currentTask && (
-            <div className="space-y-3">
-                <h3 className="font-bold text-muted-foreground text-sm">Nearby Requests</h3>
-                {tasks.length === 0 ? <p className="text-sm text-muted-foreground">Searching for requests...</p> : 
-                tasks.map(t => (
-                    <div key={t._id} className="glass-card p-4 flex justify-between items-center border-l-4 border-yellow-400">
-                        <div>
-                            <p className="font-bold text-white">{t.foodType}</p>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                                <MapPin className="w-3 h-3" /> {t.location?.address || "Hyderabad"}
+        <AnimatePresence mode="wait">
+            {activeTab === "requests" && (
+                <motion.div key="req" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="space-y-3">
+                    {availableTasks.length === 0 ? <p className="text-sm text-muted-foreground text-center p-4 glass-card">No new requests nearby.</p> : 
+                    availableTasks.map(t => (
+                        <div key={t._id} className="glass-card p-4 border-l-4 border-yellow-400">
+                            <div className="flex justify-between items-start mb-3">
+                                <div>
+                                    <p className="font-bold text-white text-lg">{t.foodType}</p>
+                                    <p className="text-emerald-400 text-sm">{t.quantity}kg • Expires in {t.expiry}</p>
+                                </div>
+                                <button onClick={() => handleAccept(t._id)} className="btn-glow-solid px-4 py-2 text-xs">Add to Route</button>
+                            </div>
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <MapPin className="w-3 h-3" /> Pickup: {t.location?.lat ? "Location Provided" : "Unknown"}
                             </div>
                         </div>
-                        <button onClick={() => handleAccept(t._id)} className="btn-glow-solid px-4 py-2 text-xs">Accept</button>
-                    </div>
-                ))}
-            </div>
-        )}
+                    ))}
+                </motion.div>
+            )}
+
+            {activeTab === "routes" && (
+                <motion.div key="rt" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="space-y-4">
+                    {!currentTarget ? (
+                        <div className="glass-card p-6 text-center text-muted-foreground">
+                            <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                            No active tasks. Go to Requests to add to your queue.
+                        </div>
+                    ) : (
+                        <>
+                            {/* TARGET #1 */}
+                            <div className={`glass-card p-6 border-l-4 relative overflow-hidden ${currentTarget.urgent ? 'border-red-500 bg-red-500/10' : 'border-emerald-500 bg-emerald-500/5'}`}>
+                                <h2 className={`text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2 ${currentTarget.urgent ? 'text-red-500' : 'text-emerald-500'}`}>
+                                    {currentTarget.urgent ? <><ShieldAlert className="w-4 h-4"/> Urgent Delivery Required</> : "Next Stop (AI Optimized)"}
+                                </h2>
+                                <h3 className="text-xl font-bold text-white mb-1">
+                                    {currentTarget.type === 'pickup' ? "Pickup" : "Deliver"} {currentTarget.task.foodType}
+                                </h3>
+                                <p className="text-sm text-muted-foreground mb-4">
+                                    {currentTarget.type === 'pickup' ? "From: " + (currentTarget.task.donor?.name || "Donor") : "To: " + (currentTarget.task.receiver?.name || "Receiver")}
+                                </p>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button onClick={openGoogleMaps} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-bold transition-colors">
+                                        <Navigation className="w-4 h-4" /> Navigate
+                                    </button>
+                                    
+                                    <button onClick={() => handleAction(currentTarget)} className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 font-bold transition-colors text-black ${currentTarget.urgent ? 'bg-red-500 hover:bg-red-400' : 'bg-emerald-500 hover:bg-emerald-400'}`}>
+                                        {currentTarget.type === 'pickup' ? <PackageCheck className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />} 
+                                        {currentTarget.type === 'pickup' ? "Collected" : "Delivered"}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* UPCOMING STEPS QUEUE */}
+                            {routeSteps.length > 1 && (
+                                <div className="mt-4">
+                                    <h4 className="text-xs font-bold text-muted-foreground uppercase mb-3">Planned Route</h4>
+                                    <div className="space-y-2 relative before:absolute before:inset-0 before:ml-[15px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
+                                        {routeSteps.slice(1).map((step, idx) => (
+                                            <div key={step.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active glass-card p-3 rounded-xl opacity-70">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${step.urgent ? 'bg-red-500/20 text-red-500' : (step.type === 'pickup' ? 'bg-[#00FFB2]/20 text-[#00FFB2]' : 'bg-blue-500/20 text-blue-400')}`}>
+                                                        {idx + 2}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-bold text-sm text-white flex items-center gap-2">
+                                                            {step.type === 'pickup' ? "Pickup" : "Drop-off"} {step.task.foodType}
+                                                            {step.urgent && <AlertTriangle className="w-3 h-3 text-red-500" />}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </motion.div>
+            )}
+        </AnimatePresence>
       </div>
 
       {/* MAP PANEL */}
       <div className="w-full md:w-2/3 glass-card p-1 h-[600px] relative rounded-xl overflow-hidden">
-        <MapContainer center={agentLoc} zoom={15} style={{ height: "100%", width: "100%" }}>
+        <MapContainer center={agentLoc} zoom={13} style={{ height: "100%", width: "100%" }}>
             <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
-            
-            {/* Auto-Recenter Map when Agent moves */}
             <RecenterMap lat={agentLoc[0]} lng={agentLoc[1]} />
 
-            {/* Agent Live Marker */}
             <Marker position={agentLoc}><Popup>You (Live)</Popup></Marker>
 
-            {currentTask && routePath.length > 0 && (
-                <>
-                    <Polyline positions={routePath} pathOptions={{ color: "#00FFB2", weight: 5 }} />
-                    <Marker position={routePath[1]}>
-                        <Popup>{destinationLabel}</Popup>
-                    </Marker>
-                </>
-            )}
-
-            {!currentTask && tasks.map(t => t.location && (
+            {activeTab === "requests" && availableTasks.map(t => t.location && (
                 <Marker key={t._id} position={[t.location.lat, t.location.lng]}>
                     <Popup>Pickup: {t.foodType}</Popup>
                 </Marker>
             ))}
+
+            {activeTab === "routes" && routeSteps.map((step, idx) => (
+                <Marker key={step.id} position={[step.location.lat, step.location.lng]} icon={createNumberedIcon(idx + 1, step.type === 'pickup', step.urgent)}>
+                    <Popup>{step.type === 'pickup' ? "Pickup" : "Deliver"}: {step.task.foodType}</Popup>
+                </Marker>
+            ))}
+
+            {activeTab === "routes" && routeSteps.length > 0 && (
+                <Polyline positions={polylinePositions} pathOptions={{ color: "#00FFB2", weight: 4, dashArray: "10,10" }} />
+            )}
         </MapContainer>
         
-        {currentTask && (
-            <>
-                <div className="absolute top-4 right-4 bg-black/80 backdrop-blur p-4 rounded-xl z-[400] border border-emerald-500/30">
-                    <h4 className="text-emerald-400 font-bold flex items-center gap-2">
-                        <Navigation className="w-4 h-4" /> Navigating
-                    </h4>
-                    <p className="text-white font-bold mt-1">
-                        {currentTask.status === "assigned" ? "To Donor" : "To Receiver"}
-                    </p>
-                </div>
-                
-                <button 
-                    onClick={openGoogleMaps}
-                    className="absolute bottom-6 right-6 z-[400] flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg font-bold transition-transform hover:scale-105 active:scale-95 group"
-                >
-                    <MapIcon className="w-5 h-5" />
-                    <span>Open Navigation</span>
-                    <ExternalLink className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
-                </button>
-            </>
+        {currentTarget && activeTab === "routes" && (
+            <button 
+                onClick={openGoogleMaps}
+                className="absolute bottom-6 right-6 z-[400] flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg font-bold transition-transform hover:scale-105 active:scale-95 group"
+            >
+                <MapIcon className="w-5 h-5" />
+                <span>Open Next Stop in Maps</span>
+                <ExternalLink className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+            </button>
         )}
       </div>
     </div>
